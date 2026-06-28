@@ -377,10 +377,10 @@ When modifying the ABI/FFI:
 
 ## License
 
-{{LICENSE}}
+MPL-2.0
 
 ## See Also
 
 - [Idris2 Documentation](https://idris2.readthedocs.io)
 - [Zig Documentation](https://ziglang.org/documentation/master/)
-- [Rhodium Standard Repositories](https://github.com/{{OWNER}}/rhodium-standard-repositories)
+- [Rhodium Standard Repositories](https://github.com/hyperpolymath/rhodium-standard-repositories)

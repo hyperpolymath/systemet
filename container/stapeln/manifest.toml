@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MPL-2.0
 #
-# Cerro Torre manifest for {{PROJECT_NAME}} .ctp bundle
+# Cerro Torre manifest for systemet .ctp bundle
 #
 # This manifest describes the container image for verified
 # container packaging. Used by `ct pack` to create .ctp bundles.
@@ -9,19 +9,19 @@
 name = "{{SERVICE_NAME}}"
 version = "{{VERSION}}"
 revision = 1
-summary = "{{PROJECT_DESCRIPTION}}"
+summary = "Equality Theory: one primitive relation (equality is conversion) at L1, discipline added in layers, not new relations."
 description = """
-{{PROJECT_NAME}} — containerised service packaged as a verified
+systemet — containerised service packaged as a verified
 cerro-torre .ctp bundle with Ed25519 signing and full provenance
 tracking.
 """
-license = "{{LICENSE}}"
-homepage = "https://{{FORGE}}/{{OWNER}}/{{REPO}}"
-maintainer = "{{AUTHOR}} <{{EMAIL}}>"
+license = "MPL-2.0"
+homepage = "https://github.com/hyperpolymath/systemet"
+maintainer = "Jonathan D.A. Jewell <{{EMAIL}}>"
 
 [provenance]
-upstream = "https://{{FORGE}}/{{OWNER}}/{{REPO}}"
-import_date = {{CURRENT_DATE}}T00:00:00Z
+upstream = "https://github.com/hyperpolymath/systemet"
+import_date = 2026-06-28T00:00:00Z
 
 [dependencies]
 runtime = ["ca-certificates", "curl"]
