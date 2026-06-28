@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MPL-2.0
 #
-# Vordr runtime monitoring configuration for {{PROJECT_NAME}}
+# Vordr runtime monitoring configuration for systemet
 #
 # Vordr watches container health, detects crashes, tracks resource usage,
 # and emits structured logs. It runs alongside the application stack and
