@@ -1,118 +1,181 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
-// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= RSR Template Repo - Explainme
-image:https://img.shields.io/badge/License-MPL_2.0-blue.svg[License: MPL-2.0,link="https://opensource.org/licenses/MPL-2.0"]
-
-:toc:
+// SPDX-FileCopyrightText: 2024-2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+= systemet — EXPLAINME
+How the README claims map to artefacts, proof obligations, and current evidence.
+:toc: left
+:sectnums:
 :icons: font
 
-This file explains how the key template claims map to real files.
+The README is the public orientation: where Equality Theory is going and why. This
+file is the engineering account: where each claim actually lives, what is specified
+versus proven, and where the evidence stops today.
 
-== Central Session Protocol Authority
+[IMPORTANT]
+====
+*Boundary.* systemet is the theory. It does *not* contain a compiler or checker.
+The reference implementation is the link:https://github.com/hyperpolymath/anytype[anytype]
+kernel. Claims about *running* code belong to anytype's `EXPLAINME.adoc`, not this
+one. Claims here are about the *specification* and its *proof obligations*.
+====
 
-Claim:
-Session protocols are centrally maintained and not duplicated in this template.
+== Equality Theory (the name)
 
-How this is implemented:
+Claim: systemet is `system` + `ET`, where ET = Equality Theory.
 
-* The local dispatcher (`session/dispatch.sh`) maps canonical commands to central
-  protocol paths in `standards/session-management-standards`.
-* Local files (`session/custom-checks.k9`, `session/local-hooks.sh`,
-  `coordination.k9`) are integration-only.
+What this means:
 
-Caveat:
-
-* If `SESSION_STANDARDS_DIR` is unset and no adjacent standards checkout exists,
-  the dispatcher records the command but cannot resolve central checklist paths.
-
-== Canonical Command Surface
-
-Claim:
-Template bindings align to one canonical command model.
-
-How this is implemented:
-
-* `Justfile` provides thin aliases (`intake-repo`, `checkpoint-change`,
-  `verify-maintenance`, `verify-substantial`, `verify-release`, `close-planned`,
-  `close-urgent`, `recover-repo`, `handover-*`).
-* Every alias calls `session/dispatch.sh` with canonical verb-object pairs.
+* The single primitive relation kept at the bottom of the system is *equality*.
+* Equality is *conversion*: `normalize` then `compare`. It is not a proof-carrying
+  subsystem and not a coercion calculus.
+* Everything else is a *layer discipline* above equality, never a new relation
+  beside it. That is the wager, and it is the reason for the name.
 
 Caveat:
 
-* Recipes are wrappers only. They do not replace protocol content from
-  the central standards repo.
+* "Equality is conversion" is only as strong as a totality guarantee at L1. Where
+  totality is assumed rather than proven, it is an assumption to be discharged, and
+  it is named as such in `AFFIRMATION.adoc`.
 
-== Runtime State Is Local
+== The five-layer stratification
 
-Claim:
-Session state is per-repository runtime output, not standards text.
+Claim: L0 runtime, L1 equality, L2 graded resources, L3 guarded recursion, L4
+effects — each defined over the one below.
 
-How this is implemented:
+Where it lives:
 
-* `session/dispatch.sh` writes command and continuity-core capture stubs to
-  `.session/LAST-CANONICAL-COMMAND.md` in the target repository path.
-
-Caveat:
-
-* Runtime files are intentionally lightweight and require human/agent completion.
-
-== Template Token Policy
-
-Claim:
-Placeholders are explicit template content until initialization.
-
-How this is implemented:
-
-* `README.adoc` and bootstrap recipes keep `{{TOKEN}}` placeholders visible.
-* `just init` performs token replacement.
+* The layering is *specified in prose* in `README.adoc` and in this file.
+* The intended formal artefacts live under `verification/proofs/` and
+  `docs/theory/`. Today those are *scaffolding*: prover stubs (Agda, Coq, Idris2,
+  Lean4, TLA+) and empty theory directories, not completed systemet developments.
 
 Caveat:
 
-* Uninitialized placeholders must not be treated as project-specific truth.
+* Do not read a populated `verification/proofs/` tree as "the layers are proven".
+  The tree is the place the proofs will go; the dated state is in `AFFIRMATION.adoc`.
 
-== Dependency Updates (Dependabot)
+== The Totality Gate (L1)
 
-Claim:
-Dependency bumps land fast and safely, without manual chasing.
+Claim: at L1 type-level functions terminate, so equality is decidable as
+normalize-then-compare, with no coercion language.
 
-How this is implemented:
+Proof obligation:
 
-* `dependabot.yml` watches the Dependabot-supported ecosystems the estate
-  actually uses: `github-actions`, `cargo`, `mix` (Elixir), `docker`.
-* `dependabot-automerge.yml` auto-merges *every* bump (patch/minor/major,
-  security or routine) **once the required checks are green** — a broken bump
-  fails CI and stays open (you get an email); it never lands on a red `main`.
-
-Caveat:
-
-* Dependabot has **no Deno or Bun ecosystem**, and `pnpm` only rides under the
-  `npm` ecosystem (itself banned). For this Deno-first estate Dependabot cannot
-  watch the runtime dependencies; the `npm`/`pip` entries are retained only for
-  transitional/legacy manifests and are otherwise inert. Deno dependency
-  currency is managed via `deno.json`/`deno.lock`, not Dependabot.
-* Do **not** add Dependabot as a ruleset *bypass* actor: that lets bumps skip
-  the required checks (secret-scanning, SAST), removing the safety gate and the
-  "it broke" signal. Auto-merge-on-green gives fast merges without it.
-
-== Julia Registry Packages — Standalone Repo Requirement
-
-Claim:
-If this template is used to create a Julia package, it must remain a standalone repository registered with the Julia package registry.
-
-How this is implemented:
-
-* Julia's package registry (General.jl or other) expects each package to be a standalone GitHub repository with `Project.toml` at the repository root.
-* Installation via `Pkg.add()`, dependency resolution, and automated CI/CD all depend on this canonical structure.
+* Totality of L1 type-level computation (no non-terminating type-level functions
+  admitted).
+* Soundness and completeness of conversion-as-equality relative to the intended
+  model.
 
 Caveat:
 
-* Do NOT move this repository into a monorepo or subdirectory, as this breaks registry registration and package discoverability.
-* Julia packages published to a registry must each remain a standalone top-level repository (registry registration and package discovery require it).
-* Non-registry Julia packages can be organized differently if they are not published to any registry.
+* Any accepted escape hatch must be recorded as an explicit assumption or unsafe
+  boundary, never folded silently into "equality".
 
+== The Structural Gate (L2)
 
-== License
+Claim: shallow `CAR`/`CDR` projection from an additive product `&` is admitted;
+deep co/contravariant rewriting is refused.
 
-This project is licensed under the Mozilla Public License, v. 2.0. See the `LICENSE` file for details.
+Proof obligation:
 
-SPDX-License-Identifier: CC-BY-SA-4.0
+* Soundness of shallow structural projection.
+* A precise statement of the refused class (deep variance through function spaces,
+  effects, resources, lifetimes, linear positions) and why admitting it would
+  reopen the Coherence Cliff.
+
+Caveat:
+
+* This is a design boundary. A contribution that reintroduces deep variance must
+  carry the argument that it does not recreate the anti-stack.
+
+== The Polarity Gate
+
+Claim: forward casts `A -> ?` are lossless forgetting; backward casts `? -| A` are
+lossy and carry a blame grade `!_{blame}`; there is no universal `any`.
+
+Proof obligation:
+
+* The blame grade is genuinely part of the L2 resource accounting (not cosmetic).
+* Backward recovery cannot launder loss into an untracked position.
+
+== Pluggable grades (L2 algebra)
+
+Claim: a new discipline is a change of grade algebra, not a change of checker.
+
+Proof obligation:
+
+* The laws a candidate grade algebra must satisfy (semiring/ordering structure and
+  the operations the rules use) stated precisely enough to check a candidate.
+* A demonstration that the *same* rules instantiate to distinct disciplines (affine,
+  cost, information-flow lattice, privacy budget, latency×billing).
+
+Caveat:
+
+* "Pick the algebra" is bounded by those laws. Arbitrary metadata that does not
+  satisfy them is not a grade.
+
+== Roles to tropes
+
+Claim: global roles/coercions are replaced by local finite trope machines
+`A@t1 -> A@t2 -> A@t3`.
+
+Proof obligation:
+
+* A trope-preservation result: well-typed movement through a finite machine
+  preserves the relevant invariants.
+* Per-API obligations: each real protocol (file handle, socket, transaction,
+  stream, capability) needs its own finite machine and preservation argument.
+
+Caveat:
+
+* Tropes do not "solve roles automatically". They relocate the burden to explicit,
+  checkable state movement.
+
+== TEA erasure (L4)
+
+Claim: a Total + Effect-graded + Affine handler should erase completely.
+
+Status: *OPEN*. This is the headline open problem, not a result.
+
+* The intended erasure condition is T ∧ E ∧ A.
+* Effects are not assumed free merely because they are typed.
+* The README and any paper must describe TEA erasure as a *target*/amber claim
+  until a formal proof exists and is recorded in `AFFIRMATION.adoc`.
+
+== Relationship to anytype and AffineScript
+
+Claim: systemet is the theory; anytype is the reference kernel; AffineScript is a
+profile.
+
+How this is kept honest:
+
+* systemet owns the semantics and is the *semantic authority* (see
+  `.machine_readable/6a2/anchors/ANCHOR.a2ml`). Downstream may *extend* but not
+  *redefine* the theory.
+* anytype must *pin* systemet upstream and implement it; it may not silently change
+  the theory to match the implementation. If implementation pressure forces a
+  theory change, it is an ADR in systemet, not a quiet edit in anytype.
+* AffineScript is `grade = affine + cost` on the anytype kernel; it is downstream of
+  both.
+
+== RSR integration
+
+Claim: systemet uses the Rhodium Standard Repository structure without that
+infrastructure being part of the theory.
+
+How this is implemented:
+
+* `0-AI-MANIFEST.a2ml` is the AI-agent entry point; `.machine_readable/` holds
+  metadata, policy, contractiles, anchors, and agent-readable state; `just validate`
+  checks repository shape; `AFFIRMATION.adoc` is the dated honesty snapshot;
+  `AUDIT.adoc` is the release gate.
+
+Caveat:
+
+* Passing RSR validation proves the *repository* is well-formed. It proves nothing
+  about systemet's *soundness*. Those are separate claims with separate evidence.
+
+== Licence
+
+* Prose documentation: `CC-BY-SA-4.0`. Code/config/scripts: `MPL-2.0`.
+* Per-file `SPDX-License-Identifier` headers are authoritative; the root `LICENSE`
+  controls GitHub's detected licence.

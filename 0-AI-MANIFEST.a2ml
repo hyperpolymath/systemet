@@ -5,11 +5,11 @@
 #
 [metadata]
 version = "0.1.0"
-last-updated = "{{CURRENT_DATE}}"
+last-updated = "2026-06-28"
 
 [project]
-name = "[YOUR-REPO-NAME]"
-purpose = "{{PROJECT_DESCRIPTION}}"
+name = "systemet"
+purpose = "Equality Theory — the stratified type theory (equality is conversion at L1; discipline in layers) that the anytype kernel implements. This repo is the semantic authority; it carries the spec and proof obligations, not a compiler."
 
 [ai-allocation]
 agents = [

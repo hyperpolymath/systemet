@@ -13,3 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- Run: just changelog -->
 
 ## [Unreleased]
+
+### Added
+- Instantiated this repository as **systemet — Equality Theory** (`system` + `ET`),
+  the stratified type theory the `anytype` kernel implements.
+- Authored `README.adoc` and `EXPLAINME.adoc` for the theory: the five layers, the
+  L1 equality-is-conversion cut, the three gates (Totality/Structural/Polarity),
+  roles-as-tropes, and TEA-erasure as an open proof obligation.
+- Instantiated identity descriptiles (CLADE/ECOSYSTEM/ANCHOR/STATE/META) and the
+  AFFIRMATION honesty snapshot with the systemet identity and an honest status
+  (theory specified; proofs OPEN; no compiler here).
+
+### Changed
+- Split the theory out of the earlier combined "EveryType" draft. The over-claiming
+  "EveryType" name is retired; the kernel half now lives in the `anytype` repo and
+  this repo holds the theory.
+
+### Notes
+- `uuid` is a PROVISIONAL deterministic UUIDv5 of the forge URL; `clade` is
+  PROVISIONAL. Both must be confirmed/registered in `gv-clade-index`.
+- `CLAUDE.md` is generated from the descriptiles — run `just claude-md` to refresh
+  it where `nickel`/`just` are available.

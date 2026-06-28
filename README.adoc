@@ -1,99 +1,276 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
-// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-// SPDX-FileCopyrightText: 2024-2026 Jonathan D.A. Jewell (hyperpolymath)
-= {{PROJECT_NAME}}
-:toc:
-:toc-placement: preamble
+// SPDX-FileCopyrightText: 2024-2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+= systemet
+Equality Theory: one relation at the bottom, discipline in the layers.
+:toc: left
+:sectnums:
+:icons: font
 
-image:https://img.shields.io/badge/OpenSSF-Best_Practices-green?logo=opensourcesecurity[OpenSSF Best Practices,link="https://www.bestpractices.dev/en/projects/new?repo_url=https://{{FORGE}}/{{OWNER}}/{{REPO}}"]
 image:https://img.shields.io/badge/License-MPL_2.0-blue.svg[License: MPL-2.0,link="https://opensource.org/licenses/MPL-2.0"]
-image:https://raw.githubusercontent.com/hyperpolymath/palimpsest-license/main/assets/badges/svg/badge-quantum-safe.svg[Quantum-Safe Provenance,link="https://github.com/hyperpolymath/palimpsest-license/blob/main/v1.0/exhibits/EXHIBIT-B-QUANTUM-SAFE.txt"]
 image:https://img.shields.io/badge/Docs-CC--BY--SA--4.0-blue.svg[Docs: CC-BY-SA-4.0,link="https://creativecommons.org/licenses/by-sa/4.0/"]
-image:https://api.thegreenwebfoundation.org/greencheckimage/{{FORGE}}[Green Web,link="https://www.thegreenwebfoundation.org/green-web-check/?url={{FORGE}}"]
 image:https://img.shields.io/badge/RSR-Rhodium_Standard-9C27B0[Rhodium Standard Repository,link="https://github.com/hyperpolymath/rhodium-standard-repositories"]
-image:https://img.shields.io/badge/Idris-Inside-5E5086?logo=idris&logoColor=white[Idris Inside,link="https://github.com/hyperpolymath/proven"]
+image:https://img.shields.io/badge/status-theory_(no_proofs_yet)-orange[Status: theory, proofs open]
 
-{{PROJECT_DESCRIPTION}}
+*systemet* is a stratified type **theory**. The name is `system` + `ET`, where *ET*
+stands for **Equality Theory** — because the one primitive relation the whole system
+keeps at the bottom is *equality*, and everything else is layered above it as
+discipline rather than added as new relations.
 
 [IMPORTANT]
 ====
-*This file is a template.* You are reading `README.adoc` from the *RSR template repo*
-(or a freshly-cloned copy of it). Run `just init` to replace every `{{PLACEHOLDER}}`
-token with your project's details, then delete this admonition. Until you do, the
-`{{...}}` markers below are intentional placeholders, not content.
+*systemet is the theory, not an implementation.* It defines the semantics, the
+invariants, and the proof obligations. The reference kernel that *implements*
+systemet is a separate repository, link:https://github.com/hyperpolymath/anytype[*anytype*].
+A downstream product profile of that kernel is *AffineScript*.
+
+[cols="1,3",options="header"]
+|===
+| Repository | Role
+| `systemet` (this repo) | The theory — Equality Theory. Semantic authority: the spec, invariants, and proof obligations.
+| `anytype`              | The kernel — the reference engine that implements this theory. "Pick the algebra, get the discipline."
+| AffineScript          | One opinionated product profile built on the `anytype` kernel (`grade = affine + cost`).
+|===
 ====
 
-== What this is
+== The wager
 
-A new repository scaffolded from the *Rhodium Standard Repository (RSR)* template:
-a batteries-included starting point that ships with CI/CD, machine-readable project
-metadata, an AI-agent gatekeeper protocol, a formally-typed ABI/FFI seam
-(Idris2 + Zig), container and reproducible-build scaffolding, and governance
-infrastructure — all wired and passing the RSR validators on day one.
+Modern type systems usually grow by adding *new relations on types*: equality
+evidence, roles, variance, subtyping, gradual escape hatches, region constraints.
+Each new relation has to cohere with every other one. Two features do not create
+two obligations; they create a *square* of interactions. Three create a grid.
+Eventually the compiler is no longer checking programs — it is managing a treaty
+between equality, subtyping, variance, effects, resources, inference, and runtime
+casts. systemet calls that failure mode the *Coherence Cliff*, and the underlying
+shape the *anti-stack*:
 
-Replace this section with a description of *your* project once initialised.
+> features accrete sideways as new type relations instead of stacking vertically
+> as disciplined layers.
 
-== Quick start
+The systemet wager is one sentence:
 
-[source,bash]
-----
-# 1. Create a repo from this template (or clone it), then from the repo root:
-just init                # interactive bootstrap: fills every {{PLACEHOLDER}}
+> *Do not add a new type relation when a layer discipline will do.*
 
-# 2. See the available tasks:
-just                     # lists all phases (build, test, validate, audit, ...)
+So systemet keeps exactly one primitive relation at the bottom — equality — and
+moves expressive pressure *upward* into layers, not *sideways* into new relations.
 
-# 3. Check the repo still satisfies the RSR shape:
-just validate            # structure + metadata checks
-----
+== The five layers
 
-`just init` prompts for the project name, owner, author, licence contact, and the
-other values listed in `.machine_readable/ai/PLACEHOLDERS.adoc`, substitutes them
-across the tree, validates the result, and (if available) runs the `k9-svc` checks.
+systemet is stratified. Each layer is defined in terms of the one below it; the
+relation set never grows.
 
-== What you get
-
-* *Machine-readable metadata* (`.machine_readable/6a2/`) — `STATE`, `META`,
-  `ECOSYSTEM`, `PLAYBOOK`, `AGENTIC`, `NEUROSYM`, `CLADE`, and `anchors/ANCHOR`,
-  in a2ml, so tools and agents can read the project's state and boundaries.
-* *AI gatekeeper protocol* — `0-AI-MANIFEST.a2ml` is the universal entry point that
-  tells an AI agent how to work in this repo before it touches anything.
-* *Typed ABI/FFI seam* — `src/interface/Abi/` (Idris2 type + layout proofs) over
-  `src/interface/ffi/` (Zig implementation), with generated C headers.
-* *CI/CD* — GitHub Actions for quality, security (CodeQL, Scorecard, secret
-  scanning), multi-forge mirroring, and RSR anti-pattern enforcement.
-* *Supply-chain & reproducibility* — container layering (stapeln), Guix shells,
-  SBOM, and signing hooks.
-* *Governance* — `GOVERNANCE.adoc`, `MAINTAINERS.adoc`, `.github/` community health
-  files, and a release `AUDIT.adoc` gate.
-
-== Repository map
-
-[cols="1,3"]
+[cols="1,2,3",options="header"]
 |===
-| Path | What lives there
+| Layer | Meaning | Theory status
 
-| `0-AI-MANIFEST.a2ml`      | Universal entry point for AI agents (read first).
-| `.machine_readable/`      | Project metadata, policies, contractiles, AI configs.
-| `src/interface/`          | Typed ABI (Idris2) + FFI (Zig) + generated headers.
-| `docs/`                   | Onboarding, status, governance, practice, decisions.
-| `build/`, `Justfile`      | Task orchestration (`just` phases delegate to `build/just/*.just`).
-| `.github/`                | Workflows + community health files.
-| `tests/`, `benches/`      | Test suites and benchmarks.
+| *L4 · effects `◇`*
+| Effect handlers under an erasure discipline
+| *OPEN* — the target is to prove when a Total + Effect-graded + Affine (TEA) handler erases completely
+
+| *L3 · recursion `▶`*
+| Guarded recursion
+| specified
+
+| *L2 · resources `□`*
+| Graded-modal substrate over a pluggable grade algebra (semiring)
+| specified — this is where the discipline lives
+
+| *L1 · equality*
+| The totality cut: equality *is* conversion
+| specified — no coercions, no roles, no representational-equality calculus
+
+| *L0 · runtime*
+| Lowering target (e.g. WASM/C)
+| specified
 |===
 
-== Where to go next
+The defining move is *L1*. In System F~c~ a great deal of expressive pressure is
+pushed *into* equality, which becomes a proof-carrying subsystem. systemet cuts
+earlier:
 
-* `EXPLAINME.adoc` — the engineering deep-dive: how the pieces actually work.
-* `AFFIRMATION.adoc` — the dated, signed honesty snapshot of the repo's true state.
-* `AUDIT.adoc` — the release audit gate.
-* `.machine_readable/ai/PLACEHOLDERS.adoc` — the full placeholder reference.
+[source,text]
+----
+System Fc:  equality becomes a proof-carrying subsystem.
+systemet:   equality remains conversion; discipline moves into layers.
+----
+
+== The three gates
+
+systemet works by *refusing three tempting collapses*. Each gate is a boundary,
+not an omission.
+
+=== 1. The Totality Gate (L1)
+
+At L1, type-level functions must terminate. Therefore equality is decidable by:
+
+[source,text]
+----
+normalize
+compare
+done
+----
+
+No coercion language. No roles. No representational-equality proof calculus. No
+"trust me, these two types are the same at runtime." If a type-level function does
+not terminate, it does not belong at L1.
+
+=== 2. The Structural Gate (L2)
+
+systemet admits *shallow structural subtyping* exactly where it is just projection
+— `CAR`/`CDR`-style access from an additive product `&`, covering width-like
+behaviour for rows, variants, refinements, and record-like products.
+
+[source,text]
+----
+Shallow CAR/CDR projection is allowed.
+Deep co/contravariant rewriting is not.
+----
+
+Deep variance pushes structure through function spaces, resources, effects,
+lifetimes, and linearity — which is exactly where coherence starts to leak. The
+gate allows the shallow case and refuses the deep one.
+
+=== 3. The Polarity Gate
+
+systemet admits *polarized casts*, not a universal gradual `any`:
+
+[source,text]
+----
+A -> ?     forward, lossless, forgetful
+? -| A     backward, lossy, blame-graded
+----
+
+The forward direction is ordinary forgetting. The backward direction is *not*
+treated as a magical runtime check: it carries a blame grade `!_{blame}` that is
+part of the resource story. There is no universal `any` that silently punches a
+hole through the type system — only directed loss, explicit polarity, and graded
+blame.
+
+== What the theory makes cheap
+
+=== Disciplines as a one-line change of algebra
+
+Because the discipline lives at L2 over a pluggable grade algebra, a new
+discipline is a change of algebra, not a change of checker:
+
+[source,text]
+----
+grade = Affine
+grade = Cost * Nat
+grade = Low <= High        (an information-flow lattice)
+grade = [0,1]              (a probability-like grade)
+grade = PrivacyBudget
+grade = Latency x Billing
+----
+
+Same rules. Different algebra. Different discipline. A proposed grade is only
+admissible if it satisfies the laws the theory requires (the relevant operations
+and ordering) — "pick the algebra" is not "attach arbitrary metadata".
+
+=== Roles become tropes
+
+System F~c~ asks whether two types are representationally equal under a global role
+discipline. systemet avoids that question. Instead of a global `coerce`, it uses
+local, finite, model-checkable state transitions:
+
+[source,text]
+----
+A@t1 -> A@t2 -> A@t3
+----
+
+A *trope* is a finite transition machine. The burden moves from global
+representational equality to explicit, local state movement: no `coerce`, no role
+inference, no hidden representational treaty. Each real API (file handles, sockets,
+transactions, streams, capabilities) gets a finite machine and a preservation
+obligation.
+
+=== Effects erase only when proven harmless
+
+A handler that is *Total*, *Effect-graded*, and *Affine* is a *TEA* handler. The L4
+goal is to prove *when* such a handler erases completely. This is not "effects are
+free"; it is:
+
+> effects erase only when the layer discipline proves them observationally harmless.
+
+=== Dependent types, rows, and refinements without new relations
+
+They do not need new primitive relations. They live at L2 as structured uses of the
+graded substrate — which is the whole wager restated.
+
+== systemet vs the world
+
+[cols="1,2,2,2,2",options="header"]
+|===
+|  | systemet | Haskell / System Fc | Idris2 | Rust
+
+| *L1 equality*
+| conversion
+| coercion proofs / equality evidence
+| conversion
+| trait & region solving
+
+| *Coercions*
+| *none*
+| *yes*
+| mostly none at the core
+| lifetime/representation-sensitive
+
+| *L2 resources*
+| *pluggable semiring*
+| limited / plugin-dependent
+| quantity discipline `0,1,ω`
+| affine ownership
+
+| *Roles*
+| *tropes `A@t`*
+| global role system
+| none
+| lifetime / variance discipline
+
+| *Deep variance*
+| *refused*
+| controlled, external to this wager
+| limited
+| *yes*
+
+| *Effects erase*
+| TEA-purity target (open)
+| no general erasure theorem
+| no general erasure theorem
+| no general erasure theorem
+|===
+
+== Status — read this honestly
+
+systemet is, at this commit, a *theory written down*, not a proven one.
+
+* The semantics, the layering, the three gates, and the wager are *specified* in
+  this repository (this README and `EXPLAINME.adoc`).
+* The formal proofs are *open*. The `verification/proofs/` tree holds prover
+  scaffolding (Agda/Coq/Idris2/Lean4/TLA+), not completed systemet proofs.
+* L4 TEA-erasure is an *open problem*, not a result. Do not cite it as proven.
+* There is *no compiler here*. The reference kernel is link:https://github.com/hyperpolymath/anytype[anytype],
+  and it is itself at an early stage.
+
+For the dated, signed honesty snapshot see link:AFFIRMATION.adoc[AFFIRMATION];
+for the claim-to-artefact mapping see link:EXPLAINME.adoc[EXPLAINME]; for the
+release gate see link:AUDIT.adoc[AUDIT].
+
+== Contributing
+
+The useful contributions are theory and proof, not syntax:
+
+* new L2 grade algebras (security lattices, differential-privacy budgets,
+  latency/cost models, information-flow grades) *with their laws*;
+* proofs — TEA erasure, trope preservation, shallow-structural soundness, the
+  interaction of guarded recursion with grades;
+* finite trope machines for real APIs (file handles, sockets, database
+  transactions, web streams, WASM capabilities).
+
+Open issues with one of: `[ET-L2]`, `[ET-L3]`, `[ET-L4]`, `[TROPE]`, `[TEA]`.
 
 == Licence
 
-Code, configuration and scripts are link:LICENSE[Mozilla Public License 2.0]
-(`MPL-2.0`); prose documentation is `CC-BY-SA-4.0`. Both texts live in
-`LICENSES/`, and per-file `SPDX-License-Identifier` headers are authoritative.
-The GitHub-detected licence is MPL-2.0 (the root `LICENSE`). Long-term
-attribution uses Quantum-Safe Provenance — see
-link:https://github.com/hyperpolymath/palimpsest-license/blob/main/v1.0/exhibits/EXHIBIT-B-QUANTUM-SAFE.txt[PMPL Exhibit B].
+Prose documentation is licensed `CC-BY-SA-4.0`; any code, configuration, and
+scripts are `MPL-2.0`. Per-file `SPDX-License-Identifier` headers are
+authoritative. The GitHub-detected licence is MPL-2.0 via the root `LICENSE`.
+Long-term attribution uses Quantum-Safe Provenance (PMPL Exhibit B where present).
