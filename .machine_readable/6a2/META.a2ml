@@ -6,17 +6,23 @@
 
 [metadata]
 version = "0.1.0"
-last-updated = "2026-04-11"
+last-updated = "2026-06-28"
 
 [project-info]
-type = "library"  # TODO: update type (library|binary|service|website|monorepo)  # library | binary | monorepo | service | website
-languages = []             # e.g. ["rust", "zig", "idris2"]
+type = "specification"     # systemet is a type-theory specification, not a binary/service
+languages = ["idris2", "agda", "coq", "lean4", "tlaplus"]   # provers for the proof obligations
 license = "MPL-2.0"
 author = "Jonathan D.A. Jewell (hyperpolymath)"
 
 [architecture-decisions]
 # ADR format: status = proposed | accepted | deprecated | superseded | rejected
-# - { id = "ADR-001", title = "Use Zig for FFI", status = "accepted", date = "2026-02-14" }
+adrs = [
+  { id = "ADR-001", title = "Equality is conversion at L1 (no coercion calculus, no roles)", status = "accepted", date = "2026-06-28" },
+  { id = "ADR-002", title = "Discipline lives in layers over a pluggable L2 grade algebra, not in new type relations", status = "accepted", date = "2026-06-28" },
+  { id = "ADR-003", title = "Roles are replaced by local finite trope machines (A@t1 -> A@t2)", status = "accepted", date = "2026-06-28" },
+  { id = "ADR-004", title = "Split the combined 'EveryType' draft: theory -> systemet, kernel -> anytype", status = "accepted", date = "2026-06-28" },
+  { id = "ADR-005", title = "TEA-erasure (L4) is an OPEN proof obligation, not a claimed result", status = "accepted", date = "2026-06-28" },
+]
 
 [development-practices]
 build-tool = "just"

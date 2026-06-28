@@ -1,94 +1,67 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= AFFIRMATION — {{PROJECT_NAME}}, as of <UTC timestamp>
+= AFFIRMATION — systemet, as of <UTC timestamp at signing>
 :toc: macro
 :toclevels: 2
 
 _the No-Bullshit file: what we affirm was true and checkable at this moment._
 
-[NOTE]
-====
-*This file is a template.* Replace the `{{…}}` placeholders and the `<…>` anchor
-fields, then re-run your project's own checks in the same session before signing.
-
-An *affirmation* is a solemn declaration of the truth of a statement, made by
-someone who _declines to swear an oath_ — our truth-as-best-believed at a stamped
-instant, binding on our honesty, not a claim of infallibility. It is the third of
-the README / EXPLAINME / AFFIRMATION trio:
-
-[cols="1,3,2",options="header"]
-|===
-| File | Answers | Tense
-| `README.adoc` | _Where is this going, and why?_ — steering, intent, vision | future / aspirational
-| `EXPLAINME.adoc` | _How is it built, and what's the evidence?_ — engineering | descriptive / mechanism
-| *`AFFIRMATION.adoc`* (this file) | _What can we honestly affirm was *true and checkable* at a stamped moment?_ | a frozen instant, falsifiable
-|===
-====
-
 toc::[]
 
-== What this is, and how it works
+== What this is
 
-*What it is.* A short, dated, signed snapshot of what {{OWNER}} can honestly and
-verifiably claim about *{{PROJECT_NAME}}* at one exact commit. Nothing here is
-marketing and nothing is a promise about the future — those live in the README.
-This file is the receipt.
+A short, dated, signed snapshot of what can be honestly and verifiably claimed
+about *systemet* (Equality Theory) at one exact commit. The README is the vision;
+`EXPLAINME.adoc` is the mechanism; this file is the receipt. It is our best honest
+belief at a stamped instant, binding on our honesty, not a claim of infallibility.
 
-*How it stays trustworthy.* Three moving parts:
+[NOTE]
+====
+The anchor below carries `<…>` fields (commit SHA, timestamp, toolchain) that are
+filled in *at signing time*, in the same session that runs the checks. Until then
+this file is a draft.
+====
 
-. *Ground truth, not memory.* Every claim below must be produced by _running the
-  project's own checks_ in the session that writes this file (build, tests,
-  typecheck, `just audit`). Where a status doc, the `Justfile`, or memory says
-  otherwise, the live run wins and the contradiction is flagged here.
-. *A frozen anchor.* The file names the exact commit SHA, branch, UTC timestamp,
-  and toolchain (see <<verifiable-anchor>>), so "true" always means "true _at
-  this point_". Move the SHA and this file is a draft until it is re-run.
-. *A real signature.* It is landed by a *signed git commit*; that signature over
-  this content at the anchored SHA is what makes the affirmation tamper-evident
-  and attributable — not the prose alone.
+== What we affirm
 
-*We are fallible.* This is our best honest belief, not a proof of its own
-correctness. Treat it as a falsifiable claim, not gospel.
-
-== The epistemic contract (read this before you trust _or_ attack)
-
-This document records {{OWNER}}'s *best belief* at the timestamp below. It is
-*not a guarantee of correctness.* The only guarantee is *no intentional
-overclaim*: where something is proven we say "proven"; where it is a documented
-trust boundary, an experiment, or an unwired module, we say so; where a claim is
-the README's aspiration rather than a checked result, we say so. An honest claim
-that later turns out false is an *error to be fixed* — not a lie.
-
-*Standing invitation to refute.* You are invited to bulldoze any claim in this
-file. Bring a counter-example, a failing run, or a contradicting source.
-
-== What we affirm (fill in — delete the examples)
-
-[cols="2,1,3",options="header"]
+[cols="3,1,3",options="header"]
 |===
-| Claim | Status | Evidence (command / `file:line`)
-| _e.g. The library builds clean_ | affirmed | `just build` at the anchor SHA
-| _e.g. The ABI seam typechecks_ | affirmed | `idris2 --typecheck abi.ipkg`
-| _e.g. Feature X is complete_ | aspiration | README §… (not yet checked)
+| Claim | Status | Evidence
+| The repository is RSR-shaped and validates | affirmed-pending-run | `just validate` at the anchor SHA
+| Equality Theory is *specified* (five layers, three gates, the wager) | affirmed | `README.adoc`, `EXPLAINME.adoc`
+| The theory is the semantic authority; `anytype` is the implementation | affirmed | `.machine_readable/6a2/anchors/ANCHOR.a2ml`, `ECOSYSTEM.a2ml`
 |===
 
 == What we do NOT claim
 
-* List the known gaps, trust boundaries, postulates, unwired modules, and stale
-  docs here. Silence is not affirmation — name what you have *not* verified.
+* *No completed formal proofs.* `verification/proofs/` holds prover *scaffolding*
+  (Agda/Coq/Idris2/Lean4/TLA+), not finished systemet developments.
+* *L4 TEA-erasure is OPEN.* It is a target, not a theorem. Do not cite it as proven.
+* *No compiler or checker lives here.* The reference kernel is the separate
+  link:https://github.com/hyperpolymath/anytype[anytype] repository, itself early.
+* *L1 totality* is currently a specified requirement, not a discharged proof.
+* The `src/`, `tests/`, and most `docs/` trees are RSR *scaffolding* inherited from
+  the template, not systemet-specific content yet.
+
+== Provenance note
+
+This repository was split out of an earlier combined draft that conflated three
+things under the over-claiming name "EveryType": the theory, the kernel, and a
+product profile. systemet is now the *theory* (Equality Theory); the kernel is
+link:https://github.com/hyperpolymath/anytype[anytype]; the profile is AffineScript.
 
 [#verifiable-anchor]
 == Verifiable anchor
 
 [cols="1,3"]
 |===
-| Project | {{PROJECT_NAME}}
-| Repository | https://{{FORGE}}/{{OWNER}}/{{REPO}}
+| Project | systemet
+| Repository | https://github.com/hyperpolymath/systemet
 | Commit (SHA) | <full commit SHA at time of signing>
-| Branch | {{MAIN_BRANCH}}
+| Branch | main
 | Timestamp (UTC) | <ISO-8601 UTC timestamp>
-| Toolchain | <compilers / provers / versions used to ground the claims>
-| Affirmed by | {{AUTHOR}} <{{AUTHOR_EMAIL}}>
+| Toolchain | <provers / tools / versions used to ground the claims>
+| Affirmed by | Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 |===
 
 _Landed by a signed git commit. Verify with `git log --show-signature` that the

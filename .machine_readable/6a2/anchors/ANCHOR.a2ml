@@ -1,41 +1,41 @@
 # SPDX-License-Identifier: MPL-2.0
-# Copyright (c) {{CURRENT_YEAR}} {{AUTHOR}} ({{OWNER}}) <{{AUTHOR_EMAIL}}>
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 #
 # ANCHOR.a2ml - authoritative anchor for this repository
 
 [metadata]
 version = "1.0.0"
-last-updated = "{{CURRENT_DATE}}"
+last-updated = "2026-06-28"
 
 [anchor]
 schema = "hyperpolymath.anchor/1"
-repo = "{{OWNER}}/{{REPO}}"
+repo = "hyperpolymath/systemet"
 authority = "upstream-canonical"
 
 purpose = [
-  "Define canonical semantics and policy boundaries for this repository.",
-  "Declare what downstream/satellite repos can extend but not redefine.",
+  "Define the canonical semantics of Equality Theory for the estate.",
+  "Declare what downstream (the anytype kernel, AffineScript) may extend but not redefine.",
   "Provide a stable golden path and invariant contract for release readiness.",
 ]
 
 [identity]
-project = "{{PROJECT_NAME}}"
-kind = "{{PROJECT_KIND}}"                # language | library | service | tool
-one-sentence = "{{PROJECT_PURPOSE}}"
-domain = "{{PROJECT_DOMAIN}}"
+project = "systemet"
+kind = "type-theory"                      # the theory/spec; downstream kernel is a 'tool'
+one-sentence = "Equality Theory: one primitive relation (equality is conversion) at the bottom, discipline added in layers, not new relations added sideways."
+domain = "programming-language theory / type theory"
 
 [semantic-authority]
 policy = "canonical"
 
 owns = [
-  "Project semantics and specification",
-  "Invariant definitions and contractiles",
-  "Reference implementation behavior",
+  "Equality Theory semantics and specification (the five layers, the three gates, the wager)",
+  "Invariant definitions and proof obligations (L1 totality, structural soundness, polarity/blame, trope preservation, TEA erasure)",
+  "The boundary of what downstream may extend vs. redefine",
 ]
 
 [implementation-policy]
-allowed = ["Rust", "Idris2", "Zig", "Scheme", "Shell", "Just", "AsciiDoc", "Markdown"]
-forbidden = ["Node.js", "npm"]
+allowed = ["Idris2", "Agda", "Coq", "Lean4", "TLAplus", "Scheme", "Shell", "Just", "AsciiDoc"]
+forbidden = ["Node.js", "npm", "TypeScript", "Python", "Go"]
 
 [golden-path]
 smoke-test-command = [
@@ -50,13 +50,15 @@ success-criteria = [
 ]
 
 [satellite-policy]
+# The anytype kernel is a satellite of this theory.
 must-pin-upstream = true
 must-declare-authority = true
 must-have-anchor = true
 must-have-golden-path = true
 
 [semantic-authority-files]
-language-spec = "SPECIFICATION.md"
-formal-proofs = "docs/proofs/PROOFS.adoc"
+# Intended locations for the formal artefacts (forward references — not yet populated).
+language-spec = "docs/theory/SPECIFICATION.adoc"
+formal-proofs = "verification/proofs/"
 type-theory = "docs/theory/THEORY.adoc"
 algorithms = "docs/theory/ALGORITHMS.adoc"
