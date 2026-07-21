@@ -1,60 +1,71 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
-// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 = Formal Verification Proofs
 
-This directory contains formal proofs organised by proof assistant.
+This tree holds the mechanized developments for systemet's proof obligations
+(the ET ledger, `docs/theory/OBLIGATIONS.adoc`). The generic RSR template
+stubs that used to sit here (Idris2 ABI proofs, a Lean4 `ApiTypes.lean` that
+never compiled, Agda/Coq/TLA+ placeholders) were removed — they proved
+template properties, not systemet, and several were quarantined as broken in
+the template's own manifests. Git history retains them.
 
-== Directory Structure
+== Layout (target)
 
 [source]
 ----
 proofs/
-├── idris2/          # Idris2 proofs (ABI, dependent types)
-│   ├── ABI/         # ABI-specific proofs (mandatory)
-│   │   ├── Pointers.idr    # Non-null pointer safety
-│   │   ├── Layout.idr      # Memory layout correctness
-│   │   ├── Platform.idr    # Platform type size proofs
-│   │   ├── Foreign.idr     # FFI return type proofs
-│   │   └── Compliance.idr  # C ABI compliance
-│   └── Types.idr    # Core data type well-formedness
-├── lean4/           # Lean4 proofs (algebra, lattices)
-│   └── ApiTypes.lean
-├── agda/            # Agda proofs (induction, metatheory)
-│   └── Properties.agda
-├── coq/             # Coq proofs (type systems, compilation)
-│   └── TypeSafety.v
-└── tlaplus/         # TLA+ specs (distributed protocols)
-    └── StateMachine.tla
+└── lean4/                       # the active development (hermetic, no deps)
+    ├── lean-toolchain           # pinned toolchain (elan)
+    ├── lakefile.toml
+    ├── MANIFEST                 # every file listed: gated | quarantine
+    ├── Systemet.lean            # root import (coverage anchor)
+    └── Systemet/
+        ├── L1/...               # MECH-1: conversion for the core calculus
+        │                        #   (ET-1, ET-2, part of ET-3)
+        ├── L2/...               # MECH-2: grade-algebra laws + instances
+        │                        #   (ET-4, ET-5)
+        └── Audit.lean           # #print axioms over every headline theorem
 ----
 
-== Verification Commands
+Other prover directories (idris2, agda, coq, tlaplus) are created only when
+a real systemet development lands in them, together with their MANIFEST.
+An on-disk proof file not listed in a MANIFEST fails the gate.
+
+== Verification commands
 
 [source,bash]
 ----
-just proof-check-all       # Run all proof checkers
-just proof-check-idris2    # Idris2 only
-just proof-check-lean4     # Lean4 only
-just proof-check-agda      # Agda only
-just proof-check-coq       # Coq only
+just proof-check-all       # all provers with a MANIFEST (absent prover = FAIL)
+just proof-check-lean4     # the Lean4 development
+just proof-scan-dangerous  # banned-construct scan (comment-aware)
 ----
 
-== Banned Patterns
+These recipes land with the mechanization PR (`build/just/proofs.just` +
+`scripts/check-proofs.sh`). The gate FAILS — never skips — when a prover in
+a MANIFEST is not installed. Do not reintroduce a `command -v || exit 0`
+shape here; that is the estate's known fake-gate pattern.
 
-The following MUST NOT appear in any proof file:
+== Banned patterns
 
-- `believe_me` (Idris2)
-- `assert_total` (Idris2)
+The following MUST NOT appear in any gated proof file:
+
+- `sorry`, `admit`, `axiom`, `native_decide` (Lean4)
+- `believe_me`, `assert_total` (Idris2)
 - `postulate` (Idris2/Agda)
-- `sorry` (Lean4)
 - `Admitted` (Coq)
-- `unsafeCoerce` (Haskell)
 
-CI enforces this via `panic-attack assail --proofs-only`.
+Enforced by `scripts/scan-dangerous.sh` (comment-aware) plus, for Lean4, the
+transitive axiom audit in `Systemet/Audit.lean` (`#print axioms` must report
+"does not depend on any axioms" for every headline theorem — `sorryAx`
+anywhere in the dependency graph fails the gate).
 
-== Adding New Proofs
+== Adding new proofs
 
-1. Choose the appropriate prover (see PROOF-NEEDS.md)
-2. Create the `.idr`/`.lean`/`.agda`/`.v`/`.tla` file in the right directory
-3. Ensure `%default total` (Idris2) or equivalent
-4. Run the verification command
-5. Update PROOF-STATUS.md
+1. Pick the obligation from `docs/theory/OBLIGATIONS.adoc` (or file the ADR
+   if it is a new obligation).
+2. Add the file under the prover's directory and list it in that prover's
+   `MANIFEST` as `gated`.
+3. Run `just proof-check-all` locally; watch it pass — and break a proof to
+   watch it fail before trusting it.
+4. Update `docs/status/PROOF-STATUS.adoc` in the same PR (the drift gate
+   fails CI if the summary table disagrees with the MANIFESTs).

@@ -1,101 +1,82 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
-// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-// Template: rsr-template-repo/docs/status/PROOF-STATUS.adoc
-// Tracks proof completion. Requirements defined in PROOF-NEEDS.adoc
-= Proof Status — {{PROJECT}}
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+// Tracks proof completion. Obligations defined in docs/theory/OBLIGATIONS.adoc;
+// requirements tiering in PROOF-NEEDS.adoc.
+= Proof Status — systemet
+
+The obligation *statements* live in `docs/theory/OBLIGATIONS.adoc` (the ET
+ledger); this file tracks *evidence*. A row is "Done" only when a prover
+actually ran (locally and in CI via `scripts/check-proofs.sh`) and the axiom
+audit is clean. The mechanization PR adds a CI drift gate that recomputes
+the summary from the per-prover MANIFESTs and fails if this table disagrees.
 
 == Summary
 
-[cols="2,1,1,1,1,1", options="header"]
+[cols="3,1,1,1,1", options="header"]
 |===
-| Category | Total | Done | In Progress | Blocked | Remaining
+| Track | Total | Done | In progress | Open
 
-| ABI/FFI (ABI) | 5 | 0 | 0 | 0 | 5
-| Typing (TP) | 2 | 0 | 0 | 0 | 2
-| Invariant (INV) | 0 | 0 | 0 | 0 | 0
-| Security (SEC) | 0 | 0 | 0 | 0 | 0
-| Concurrency (CONC) | 0 | 0 | 0 | 0 | 0
-| Algorithm (ALG) | 0 | 0 | 0 | 0 | 0
-| Domain (DOM) | 0 | 0 | 0 | 0 | 0
-| *Total* | *7* | *0* | *0* | *0* | *7*
+| ET obligations (DOM — the theory itself) | 15 | 0 | 0 | 15
+| MECH-1: L1 conversion, Lean4 (covers ET-1, ET-2, part of ET-3) | 1 | 0 | staged | —
+| MECH-2: L2 grade algebras, Lean4 (covers ET-4, ET-5) | 1 | 0 | staged | —
 |===
 
-*Overall*: 0% proven
+*Overall: 0% proven.* No completed systemet proof exists at this date. The
+generic template stubs previously counted here (5 ABI + 2 TP) were template
+properties, not systemet obligations; they were removed with the ABI seam.
 
-== Proofs Done
+== Mechanization slots
 
-// Format:
-// | ID | Proof | Prover | File | Date | Verified By |
-// | ABI-1 | Non-null pointer proofs | Idris2 | verification/proofs/idris2/ABI/Pointers.idr | 2026-XX-XX | idris2 --check |
-
-[cols="1,3,1,3,1,2", options="header"]
+[cols="1,3,2,2", options="header"]
 |===
-| ID | Proof | Prover | File | Date | Verified By
+| Slot | Headline artefact | Covers | File target
 
-| — | No proofs completed yet | — | — | — | —
-|===
+| MECH-1
+| `defEq_iff_nf : DefEq t u ↔ nf t = nf u` + `decDefEq` (β-fragment;
+  normalizer total by construction)
+| ET-1, ET-2, syntactic core of ET-3
+| `verification/proofs/lean4/Systemet/L1/`
 
-== Proofs In Progress
-
-[cols="1,3,1,2,1,2", options="header"]
-|===
-| ID | Proof | Prover | Assignee | Started | Blocker
-
-| — | — | — | — | — | —
-|===
-
-== Proofs Blocked
-
-[cols="1,3,2,3", options="header"]
-|===
-| ID | Proof | Blocked By | Notes
-
-| — | — | — | —
+| MECH-2
+| `GradeAlgebra` class (the ET-4 law set) + instances Affine, Tropical
+  (Cost), Lattice (generic + Low≤High), Product (R×S)
+| ET-4, ET-5
+| `verification/proofs/lean4/Systemet/L2/`
 |===
 
-== Proofs Remaining
+== OPEN rows (no stub files — tracked here only)
 
-[cols="1,3,1,1,1,1", options="header"]
+[cols="1,4", options="header"]
 |===
-| ID | Proof | Category | Prover | Priority | Est. Effort
+| ID | Target
 
-| ABI-1 | Non-null pointer proofs | ABI | Idris2 | P1 | 2h
-| ABI-2 | Memory layout correctness | ABI | Idris2 | P1 | 4h
-| ABI-3 | Platform type size proofs | ABI | Idris2 | P1 | 2h
-| ABI-4 | FFI function return type proofs | ABI | Idris2 | P1 | 2h
-| ABI-5 | C ABI compliance | ABI | Idris2 | P1 | 4h
-| TP-1 | Core data type well-formedness | TP | Idris2 | P1 | 4h
-| TP-2 | Public API type safety | TP | Lean4 | P2 | 4h
+| ET-14 | *TEA erasure — the headline open problem. Never cite as proven.*
+| ET-1..3 (η) | η-laws / η-long normal forms extension of MECH-1
+| ET-1..3 (NAT) | type-level ℕ + recursor via NbE (stretch; research-adjacent)
+| ET-6, ET-7 | Structural Gate soundness + refusal characterization
+| ET-8, ET-9 | Polarity Gate blame accounting + no-laundering
+| ET-10, ET-11 | L3 guarded recursion (blocked on the L3 ADR)
+| ET-12, ET-13 | Trope preservation + per-API instances (0/5)
 |===
 
-== Verification Commands
+== Verification commands
+
+Available after the mechanization PR lands:
 
 [source,bash]
 ----
-# Check all Idris2 proofs
-just proof-check-idris2
-
-# Check all Lean4 proofs
+just proof-check-all        # every prover with a MANIFEST; absent prover = FAIL
 just proof-check-lean4
-
-# Check all Agda proofs
-just proof-check-agda
-
-# Check all Coq proofs
-just proof-check-coq
-
-# Run all proof checks
-just proof-check-all
-
-# Scan for dangerous patterns
-panic-attack assail --proofs-only
+just proof-scan-dangerous   # comment-aware banned-construct scan
+./scripts/check-proofs.sh lean4
 ----
 
-== Changelog
+Until then there is deliberately *no* proof-check recipe: a recipe that
+green-exits with no prover is the estate's known fake-gate pattern and is
+not reproduced here.
 
-[cols="1,3,1", options="header"]
-|===
-| Date | Change | By
+== Escape-hatch registry echo (ET-15)
 
-| 2026-04-04 | Initial proof status tracking | Template
-|===
+No L1 escape hatch is registered. If one is ever accepted, it appears in
+`AFFIRMATION.adoc` as a named assumption and taints every dependent theorem
+in this file.

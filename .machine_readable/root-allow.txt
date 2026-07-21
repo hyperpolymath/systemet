@@ -29,7 +29,6 @@ CITATION.cff               # citation metadata (surfaced at root by #96)
 # ─── Build entry points (must live at root for their tooling) ────────────────
 Justfile                   # task runner entry point (self-contained since build/ scaffolding removal)
 coordination.k9            # repo-local session binding (template-mandated)
-abi.ipkg                   # Idris2 package for the ABI seam; sourcedir=src/interface (estate canon: root-level *-abi.ipkg). Single case-consistent src/interface/Abi/ dir. Typecheck: `idris2 --typecheck abi.ipkg`.
 
 # ─── Conventional dotfiles (tool-required at root) ───────────────────────────
 .editorconfig
@@ -54,7 +53,8 @@ machine-readable-design/   # template-only: design rationale for .machine_readab
 session/                   # dispatch.sh, custom-checks.k9, local-hooks.sh
 
 # Source / test / artifact trees (project-specific but conventional)
-src/
+# NB: src/ is deliberately NOT allowed — systemet is a theory repo (IS-NOT:
+# no runnable code); the kernel lives in hyperpolymath/anytype.
 tests/
 benches/
 examples/
