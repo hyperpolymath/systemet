@@ -1,0 +1,76 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+= 06 — L3 · Guarded Recursion
+Status: *sketched* — candidate rules below await an owner ADR
+:toc: left
+:sectnums:
+
+Source: root `README.adoc` §"The five layers" (L3 row, `▶`);
+root `README.adoc` §"Contributing" (interaction of guarded recursion with
+grades listed as a wanted proof). `EXPLAINME.adoc` contains *no* L3 section.
+
+== Honesty note (read first)
+
+Until this spec-completion pass, the root README listed L3 as "specified"
+while neither the README, EXPLAINME, nor any file in this repository stated
+a single L3 rule. That was over-claim. The README now says *sketched*, and
+this document is the sketch: it records what the prose commits to, presents
+a *candidate* rule set drawn from the standard guarded-recursion literature,
+and marks the adoption decision as an ADR the owner must make. Promoting
+this document to `specified` = adopting (or replacing) the candidate rules
+by ADR.
+
+== What the prose commits to
+
+Only this much is fixed by the existing prose:
+
+* L3 is *guarded recursion*, written with the modality `▶` ("later").
+* L3 is defined over L2 (stratification: each layer is defined in terms of
+  the one below; the relation set never grows).
+* Recursive definitions must be *productive*: the discipline exists so that
+  recursion cannot break the Totality Gate below it — L1's normalize-then-
+  compare must remain total in the presence of L3 definitions.
+* Its interaction with grades is an explicitly wanted proof (ET-11).
+
+== Candidate rule set (Nakano-style later modality) — NOT YET ADOPTED
+
+The standard discipline matching the prose's commitments is the later
+modality with a guarded fixpoint (Nakano 2000 and its descendants):
+
+[source,text]
+----
+(▶-form)    Γ ⊢ A : ★             ⟹   Γ ⊢ ▶A : ★
+(next)      Γ ⊢ t : A             ⟹   Γ ⊢ next t : ▶A
+(▶-app)     Γ ⊢ f : ▶(A → B),  Γ ⊢ t : ▶A   ⟹   Γ ⊢ f ⊛ t : ▶B
+(fix)       Γ ⊢ f : ▶A → A       ⟹   Γ ⊢ fix f : A
+----
+
+Guardedness = every recursive occurrence sits under at least one `▶`.
+Productivity is then a theorem (each unfolding of `fix f` consumes one `▶`),
+which is exactly the property L1 needs preserved.
+
+Open choices the ADR must make:
+
+1. Whether `▶` is available at the *type level* (affecting L1's calculus)
+   or only at the term level over L2 — the prose's `▶` placement in the
+   layer table suggests term level, keeping the L1 mechanization
+   (MECH-1) untouched, but this must be decided, not assumed.
+2. How `▶` scales grades: does `next` cost `1`, `0`, or a designated
+   grade `▶r`? (This is the substance of ET-11.)
+3. Whether clock variables / multiple clocks are in scope, or a single
+   implicit clock suffices for the theory's aims.
+
+== The obligations
+
+[[ET-10]]*ET-10 (Productivity/soundness).* Soundness of the guarded-
+recursion discipline: every well-typed L3 recursive definition is
+productive, and admitting L3 definitions does not break L1 totality
+(ET-1) — normalize-then-compare remains total. Status: *sketched* — cannot
+be attempted until the ADR fixes the rules; the candidate set above is the
+proposed target.
+
+[[ET-11]]*ET-11 (Grade interaction).* The interaction of guarded recursion
+with grades: a precise account of how `▶`/`next`/`fix` consume and scale
+grades from the ambient algebra, with the L2 accounting theorems surviving
+the extension. Listed as a wanted proof in the root README's Contributing
+section. Status: open question, specified as an obligation only.

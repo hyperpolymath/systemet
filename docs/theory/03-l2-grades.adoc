@@ -1,0 +1,121 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+= 03 — L2 · Grades (the graded-modal substrate)
+Status: specified — law set mechanization in progress (MECH-2)
+:toc: left
+:sectnums:
+
+Source: root `README.adoc` §"The five layers" (L2 row) and §"Disciplines as a
+one-line change of algebra"; `EXPLAINME.adoc` §"Pluggable grades (L2
+algebra)".
+
+== The claim
+
+L2 is a graded-modal type system over a *pluggable grade algebra*. The rules
+are fixed once; a discipline is chosen by choosing the algebra:
+
+[source,text]
+----
+grade = Affine
+grade = Cost * Nat
+grade = Low <= High        (an information-flow lattice)
+grade = [0,1]              (a probability-like grade)
+grade = PrivacyBudget
+grade = Latency x Billing
+----
+
+Same rules. Different algebra. Different discipline. This is the wager's
+positive half: dependent-type-like, row-like, and refinement-like expressive
+power lives here as structured uses of the graded substrate — never as new
+primitive relations beside equality.
+
+== The admissibility contract (the ET-4 law set)
+
+"Pick the algebra" is bounded. A candidate grade algebra is a structure
+
+[source,text]
+----
+R = (|R|, +, ·, 0, 1, ≤)
+----
+
+satisfying the *ordered-semiring laws*. This is the precise statement
+EXPLAINME demands ("stated precisely enough to check a candidate"); the
+mechanized form is the `GradeAlgebra` class in
+`verification/proofs/lean4/Systemet/L2/GradeAlgebra.lean`.
+
+.Reading of the operations
+[cols="1,3",options="header"]
+|===
+| Symbol | Role in the typing rules
+
+| `0` | the grade of an unused assumption
+| `1` | the grade of a single direct use
+| `+` | context join: combining two uses of the same assumption
+      (e.g. the two premises of an application)
+| `·` | sequential composition / scaling: usage under a graded modality
+| `≤` | subusage: `r ≤ s` means an assumption graded `r` may stand where
+      `s` is demanded
+|===
+
+.The laws
+[source,text]
+----
+(+ is a commutative monoid)
+  a + (b + c) = (a + b) + c
+  a + b       = b + a
+  a + 0       = a
+
+(· is a monoid, absorbing at 0)
+  a · (b · c) = (a · b) · c
+  1 · a = a          a · 1 = a
+  0 · a = 0          a · 0 = 0
+
+(· distributes over +)
+  a · (b + c) = (a · b) + (a · c)
+  (a + b) · c = (a · c) + (b · c)
+
+(≤ is a partial order)
+  a ≤ a
+  a ≤ b, b ≤ c  ⟹  a ≤ c
+  a ≤ b, b ≤ a  ⟹  a = b
+
+(the operations are monotone)
+  a ≤ b, c ≤ d  ⟹  a + c ≤ b + d
+  a ≤ b, c ≤ d  ⟹  a · c ≤ b · d
+----
+
+A proposed grade that does not satisfy these laws *is not a grade* — it is
+arbitrary metadata, and the checker owes it nothing.
+
+== Graded judgement shape
+
+The graded typing judgement threads grades through the context (notation
+from link:00-notation.adoc[00 — Notation]):
+
+[source,text]
+----
+Γ ⊢ᵣ t : A          Γ ::= · | Γ, x :ˢ A       r, s ∈ R
+----
+
+with the characteristic rules using exactly the operations above: variables
+demand `1` (up to `≤`), application joins premise usage with `+`, and the
+graded modality `□ᵣ A` scales usage with `·`. The full rule table is fixed
+together with the L3 rules once the L3 ADR lands (see
+link:06-l3-guarded-recursion.adoc[06]); the algebra contract above is stable
+independently of that.
+
+== The obligations
+
+[[ET-4]]*ET-4 (Law set).* The ordered-semiring contract above is the
+admissibility criterion for a candidate grade algebra, stated precisely
+enough to check a candidate mechanically. Status: specified; mechanization
+slot MECH-2 (`verification/proofs/lean4/Systemet/L2/GradeAlgebra.lean` — the
+class *is* the statement; per-instance proofs are the checks).
+
+[[ET-5]]*ET-5 (Instantiation).* The *same* rules yield distinct disciplines
+under distinct algebras: affine usage, cost accounting, information-flow,
+privacy budget, latency×billing. Evidence: each catalogue algebra
+(link:09-grade-algebra-catalogue.adoc[09]) is proven an instance of the one
+`GradeAlgebra` class, including a generic product construction
+(`R × S`) showing "latency × billing" is composition, not a new checker.
+Status: specified; evidenced by MECH-2 instances.
