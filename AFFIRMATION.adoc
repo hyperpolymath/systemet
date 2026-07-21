@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= AFFIRMATION — systemet, as of <UTC timestamp at signing>
+= AFFIRMATION — systemet, as of 2026-07-21T14:43Z
 :toc: macro
 :toclevels: 2
 
@@ -15,33 +15,41 @@ about *systemet* (Equality Theory) at one exact commit. The README is the vision
 `EXPLAINME.adoc` is the mechanism; this file is the receipt. It is our best honest
 belief at a stamped instant, binding on our honesty, not a claim of infallibility.
 
-[NOTE]
-====
-The anchor below carries `<…>` fields (commit SHA, timestamp, toolchain) that are
-filled in *at signing time*, in the same session that runs the checks. Until then
-this file is a draft.
-====
-
 == What we affirm
+
+Every "affirmed-ran" row below was produced by actually running the named
+command in the session that filled this anchor, against the anchor SHA.
 
 [cols="3,1,3",options="header"]
 |===
 | Claim | Status | Evidence
-| The repository is RSR-shaped and validates | affirmed-pending-run | `just validate` at the anchor SHA
-| Equality Theory is *specified* (five layers, three gates, the wager) | affirmed | `README.adoc`, `EXPLAINME.adoc`
-| The theory is the semantic authority; `anytype` is the implementation | affirmed | `.machine_readable/6a2/anchors/ANCHOR.a2ml`, `ECOSYSTEM.a2ml`
+| The repository is RSR-shaped and validates | affirmed-ran | `./scripts/validate-template.sh` — PASS (4 warnings)
+| Equality Theory is *specified*: five layers, three gates, the wager, formal spec per layer/gate, and the citable obligation ledger ET-1..ET-15 | affirmed | `README.adoc`, `EXPLAINME.adoc`, `docs/theory/` incl. `OBLIGATIONS.adoc`
+| The L2 grade-algebra law set (ET-4) and four instances + the product construction (ET-5) are *machine-checked* | affirmed-ran | Lean 4.32.0, `verification/proofs/lean4/Systemet/L2/`; `./scripts/check-proofs.sh lean4` — PASS
+| L1 hereditary substitution and the normalizer are *total by construction* (ET-1, core calculus) and stability `nf_emb : nf (embNf n) = n` is proven | affirmed-ran | `verification/proofs/lean4/Systemet/L1/`; same gate run
+| Every gated theorem depends on nothing outside Lean's three-axiom trusted base; no `sorryAx`, no user axioms | affirmed-ran | axiom audit in `./scripts/check-proofs.sh lean4` (12/12), `Systemet/Audit.lean`
+| The proof gate FAILS on: broken proof, smuggled `axiom`, absent prover, unlisted proof file, status drift | affirmed-ran | watched-to-fail runs recorded in PR #17; drift gate `./scripts/check-proof-status.sh` — PASS
+| The golden path is real: `just test && just quality` runs the proof gates, scans, shape checks — no echo-stub greens | affirmed-ran | Justfile recipes wired to `scripts/*` (this PR); both PASS at the anchor SHA
+| The theory is the semantic authority; `anytype` is the implementation | affirmed | `.machine_readable/6a2/anchors/ANCHOR.a2ml`, `ECOSYSTEM.a2ml`; anytype pins systemet (its issue #13 tracks the pin refresh)
 |===
 
 == What we do NOT claim
 
-* *No completed formal proofs.* `verification/proofs/` holds prover *scaffolding*
-  (Agda/Coq/Idris2/Lean4/TLA+), not finished systemet developments.
-* *L4 TEA-erasure is OPEN.* It is a target, not a theorem. Do not cite it as proven.
+* *ET-2 is not closed.* `DefEq` is stated and stability is proven, but soundness
+  (`DefEq t (embNf (nf t))`), completeness (`DefEq t u → nf t = nf u`), and
+  `decDefEq` are OPEN — MECH-1 milestone 2. "Totality + stability" is not
+  "decidability of conversion".
+* *Mechanization scope is the core calculus* (type-level STLC with base
+  constants and the object arrow; grade algebras as ordered semirings) — not
+  the full-theory ET statements.
+* *L4 TEA-erasure (ET-14) is OPEN.* It is a target, not a theorem. Do not cite
+  it as proven.
+* *The Structural and Polarity gates (ET-6..9), L3 (ET-10/11), and tropes
+  (ET-12/13) have no mechanization* — statements only, in `docs/theory/`.
+* *`just fmt-check` checks nothing* (no formatter is configured for
+  AsciiDoc/Lean); the recipe says so explicitly rather than claiming a pass.
 * *No compiler or checker lives here.* The reference kernel is the separate
   link:https://github.com/hyperpolymath/anytype[anytype] repository, itself early.
-* *L1 totality* is currently a specified requirement, not a discharged proof.
-* The `src/`, `tests/`, and most `docs/` trees are RSR *scaffolding* inherited from
-  the template, not systemet-specific content yet.
 
 == Provenance note
 
@@ -57,12 +65,14 @@ link:https://github.com/hyperpolymath/anytype[anytype]; the profile is AffineScr
 |===
 | Project | systemet
 | Repository | https://github.com/hyperpolymath/systemet
-| Commit (SHA) | <full commit SHA at time of signing>
+| Commit (SHA) | `a11c98774c8c4a1b35c1e3bd9145a191dffb3840` (main = merge of PR #17)
 | Branch | main
-| Timestamp (UTC) | <ISO-8601 UTC timestamp>
-| Toolchain | <provers / tools / versions used to ground the claims>
+| Timestamp (UTC) | 2026-07-21T14:43:22Z
+| Toolchain | Lean 4.32.0 (leanprover/lean4:v4.32.0, commit 8c9756b2, via elan 4.2.3); gates: `scripts/check-proofs.sh` · `scripts/scan-dangerous.sh` · `scripts/check-proof-status.sh` · `scripts/validate-template.sh`
 | Affirmed by | Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 |===
 
-_Landed by a signed git commit. Verify with `git log --show-signature` that the
-anchor SHA above matches the commit that introduced this affirmation._
+_The anchor SHA is the `main` commit whose checked-out tree the commands above
+ran against; this affirmation lands as the next signed commit on top of it.
+Verify the signature with `git log --show-signature` on the commit that
+introduced this file's anchor._

@@ -9,7 +9,7 @@ Equality Theory: one relation at the bottom, discipline in the layers.
 image:https://img.shields.io/badge/License-MPL_2.0-blue.svg[License: MPL-2.0,link="https://opensource.org/licenses/MPL-2.0"]
 image:https://img.shields.io/badge/Docs-CC--BY--SA--4.0-blue.svg[Docs: CC-BY-SA-4.0,link="https://creativecommons.org/licenses/by-sa/4.0/"]
 image:https://img.shields.io/badge/RSR-Rhodium_Standard-9C27B0[Rhodium Standard Repository,link="https://github.com/hyperpolymath/rhodium-standard-repositories"]
-image:https://img.shields.io/badge/status-theory_(no_proofs_yet)-orange[Status: theory, proofs open]
+image:https://img.shields.io/badge/status-theory_(L2_proven%2C_L1_core_proven%2C_rest_OPEN)-orange[Status: theory, core mechanized, rest open]
 
 *systemet* is a stratified type **theory**. The name is `system` + `ET`, where *ET*
 stands for **Equality Theory** — because the one primitive relation the whole system
@@ -242,7 +242,8 @@ graded substrate — which is the whole wager restated.
 
 == Status — read this honestly
 
-systemet is, at this commit, a *theory written down*, not a proven one.
+systemet is, at this commit, a *theory written down with its tractable core
+machine-checked* — not a proven theory.
 
 * The semantics, the layering, the three gates, and the wager are *specified* in
   this repository — prose orientation in this README and `EXPLAINME.adoc`, formal
@@ -251,9 +252,14 @@ systemet is, at this commit, a *theory written down*, not a proven one.
   link:docs/theory/OBLIGATIONS.adoc[`docs/theory/OBLIGATIONS.adoc`] (ET-1..ET-15).
   L3 guarded recursion is *sketched*, not fully specified — see
   link:docs/theory/06-l3-guarded-recursion.adoc[docs/theory/06].
-* The formal proofs are *open*. The `verification/proofs/` tree holds prover
-  scaffolding, not completed systemet proofs; `docs/status/PROOF-STATUS.adoc`
-  is the dated evidence table.
+* The *mechanized core* (Lean 4, hermetic, no mathlib, gated in CI): the L2
+  grade-algebra law set (ET-4) with four instances + the product construction
+  (ET-5) is proven; L1 hereditary substitution and the normalizer are total by
+  construction (ET-1, core calculus) with stability `nf_emb` proven. ET-2's
+  soundness/completeness/`decDefEq` are *open* (statements recorded, never
+  stubbed). Every gated theorem passes an axiom audit (nothing outside Lean's
+  three-axiom trusted base); `docs/status/PROOF-STATUS.adoc` is the dated
+  evidence table, and CI fails if it drifts from the proof MANIFEST.
 * L4 TEA-erasure is an *open problem*, not a result. Do not cite it as proven.
 * There is *no compiler here*. The reference kernel is link:https://github.com/hyperpolymath/anytype[anytype],
   and it is itself at an early stage.
