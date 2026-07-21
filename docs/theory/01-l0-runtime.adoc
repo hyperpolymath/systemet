@@ -1,0 +1,48 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+= 01 — L0 · Runtime
+Status: specified
+:toc: left
+:sectnums:
+
+Source: root `README.adoc` §"The five layers" (L0 row); `EXPLAINME.adoc`
+§"The five-layer stratification".
+
+== What L0 is
+
+L0 is the *lowering target*: the untyped (or weakly typed) runtime language
+the upper layers compile to — e.g. WASM or C. Every erasure claim in the
+theory bottoms out here: "erases completely" (ET-14) means "contributes no
+code and no data to the L0 image beyond what the un-effectful program would
+have produced".
+
+== What L0 is not
+
+L0 deliberately has *no independent semantics within systemet*:
+
+* No typing judgement is defined at L0. Anything that must be checked is
+  checked at L1–L4 before lowering.
+* No systemet obligation quantifies over L0 programs directly. Obligations
+  reference L0 only through the lowering function's image.
+* L0 is not a place to smuggle in relations: there is no "runtime cast" at
+  L0 that the Polarity Gate did not already account for at L2 (see
+  link:05-polarity-gate.adoc[05 — Polarity Gate]).
+
+== Interface to the erasure results
+
+The TEA-erasure target (ET-14) is stated as an observational claim about the
+lowering: for a handler satisfying T ∧ E ∧ A, lowering the handled program
+and lowering the un-handled (pure) program yield L0 programs with the same
+observable behaviour. The precise observational equivalence used at L0 is
+part of ET-14's statement and is recorded in
+link:08-l4-effects-tea.adoc[08 — TEA].
+
+== A candidate obligation, not yet adopted
+
+The prose in the root README and EXPLAINME states no correctness obligation
+for the lowering itself (e.g. "lowering preserves L1 conversion" or "grade
+erasure at L0 is sound"). Adding one — call it a prospective *ET-16* — would
+be a theory change and therefore needs an ADR, per EXPLAINME §"Relationship
+to anytype and AffineScript". It is flagged in
+link:OBLIGATIONS.adoc[OBLIGATIONS.adoc] as a candidate, deliberately *not*
+numbered into the ledger.

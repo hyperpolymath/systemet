@@ -1,0 +1,71 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+= 08 — L4 · Effects and TEA erasure
+Status: *OPEN* — this is the headline open problem, not a result
+:toc: left
+:sectnums:
+
+Source: root `README.adoc` §"The five layers" (L4 row, `◇`) and §"Effects
+erase only when proven harmless"; `EXPLAINME.adoc` §"TEA erasure (L4)".
+
+[IMPORTANT]
+====
+TEA erasure is a *target*. It must be described as such — an amber claim —
+in the README, in any paper, and downstream, until a formal proof exists and
+is recorded in `AFFIRMATION.adoc` (EXPLAINME §"TEA erasure (L4)"). Nothing
+in this document is proven.
+====
+
+== The claim (as a target)
+
+A handler is a *TEA handler* when it is:
+
+* *T*otal — the handler's clauses terminate (the Totality Gate's reach
+  extended to handler code);
+* *E*ffect-graded — the effects it handles are tracked by the L2 grade
+  accounting (effects are typed with grades, not merely listed);
+* *A*ffine — the handler and the resources it captures are used at most
+  once (grade algebra `Affine` or stricter).
+
+The L4 goal is to prove *when* such a handler erases completely. Not
+"effects are free"; rather:
+
+> effects erase only when the layer discipline proves them observationally
+> harmless.
+
+Effects are not assumed free merely because they are typed (EXPLAINME).
+The intended erasure condition is exactly the conjunction T ∧ E ∧ A.
+
+== The obligation
+
+[[ET-14]]*ET-14 (TEA erasure) — OPEN.* State and prove: for every TEA
+handler `h` and every program `p` handled by `h`, the L0 lowering of
+`handle p with h` is observationally equivalent to the L0 lowering of the
+un-handled (pure) residue of `p` — the handler contributes no code and no
+data to the image. A complete statement must fix:
+
+1. the L4 syntax of handlers and the grading of effect operations (in terms
+   of the ET-4 algebra contract);
+2. the exact formal content of T, E, and A as predicates on handlers;
+3. the observational equivalence used at L0 (see
+   link:01-l0-runtime.adoc[01 — L0]);
+4. the erasure translation itself.
+
+None of 1–4 is fixed yet; fixing them is part of the obligation. What a
+proof would have to show, minimally: an erasure-candidate handler can be
+eliminated by a typed translation whose correctness is proved against the
+observational equivalence of (3) — and the three letters are each load-
+bearing (dropping any one of T/E/A admits a counterexample; the
+counterexamples should be exhibited as part of the development).
+
+== What must not be claimed meanwhile
+
+* No README/paper/status file may list TEA erasure as proven, partially
+  proven, or "mechanization in progress" unless a prover-checked artefact
+  exists under `verification/proofs/` and is listed in PROOF-STATUS.
+* Comparisons ("systemet vs the world") may say *target*: the README's
+  comparison table row "Effects erase" correctly reads "TEA-purity target
+  (open)".
+* Downstream (anytype, AffineScript) may *implement* effect handlers, but
+  may not advertise erasure guarantees on systemet's authority while ET-14
+  is OPEN.

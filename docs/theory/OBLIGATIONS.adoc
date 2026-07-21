@@ -1,0 +1,139 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+= OBLIGATIONS — the Equality Theory proof-obligation ledger
+The single citable list. Cite `ET-n`, never a prose paraphrase.
+:toc: left
+:sectnums!:
+
+Rules of the ledger:
+
+* Every obligation has a stable ID (`ET-1`..`ET-15`), a one-sentence
+  statement (the full statement lives in the linked theory doc), a prose
+  source, a status per the legend in link:README.adoc[docs/theory/README],
+  and — where one exists — a mechanization slot.
+* `docs/status/PROOF-STATUS.adoc` mirrors the status column and adds the
+  prover evidence; if the two files disagree, PROOF-STATUS's CI drift gate
+  is the alarm and this file is the authority on *statements*.
+* Adding, removing, or renumbering an obligation is a theory change:
+  ADR required.
+
+[cols="1,4,2,1,2",options="header"]
+|===
+| ID | Statement (one sentence) | Source | Status | Mechanization slot
+
+| [[ET-1]]ET-1
+| Totality of L1 type-level computation: every admitted type-level function
+  terminates; there is a total normalizer `nf`.
+| README §Totality Gate; EXPLAINME §Totality Gate
+| specified
+| MECH-1 `lean4/Systemet/L1/` (total-by-construction `nf`)
+
+| [[ET-2]]ET-2
+| Decidability of conversion: `Γ ⊢ A ≡ B : k ⟺ nf(A) = nf(B)`, with
+  decidable normal-form equality (`defEq_iff_nf`, `decDefEq`).
+| README §Totality Gate; EXPLAINME §Equality Theory
+| specified
+| MECH-1 `lean4/Systemet/L1/{Soundness,Completeness,Decidable}.lean`
+
+| [[ET-3]]ET-3
+| Adequacy: conversion-as-equality is sound and complete relative to the
+  intended model (00-notation §Intended model).
+| EXPLAINME §Totality Gate (obligation bullet 2)
+| specified
+| MECH-1 covers the syntactic core (β); η + model direction open
+
+| [[ET-4]]ET-4
+| The grade-algebra law set (ordered semiring: `+`,`·`,`0`,`1`,`≤`, laws in
+  03-l2-grades §Admissibility contract) stated precisely enough to check a
+  candidate mechanically.
+| EXPLAINME §Pluggable grades (bullet 1); README §Disciplines
+| specified
+| MECH-2 `lean4/Systemet/L2/GradeAlgebra.lean`
+
+| [[ET-5]]ET-5
+| Instantiation: the same rules yield distinct disciplines under distinct
+  algebras (affine, cost, info-flow lattice, privacy budget,
+  latency×billing).
+| EXPLAINME §Pluggable grades (bullet 2); README §Disciplines
+| specified
+| MECH-2 `lean4/Systemet/L2/Instances/` (incl. generic product)
+
+| [[ET-6]]ET-6
+| Soundness of shallow structural CAR/CDR projection from the additive
+  product `&` (subject reduction + exact grade accounting preserved).
+| EXPLAINME §Structural Gate (bullet 1); README §Structural Gate
+| specified
+| — (none yet)
+
+| [[ET-7]]ET-7
+| Precise characterization of the refused deep-variance class (function
+  spaces, effects, resources, lifetimes, linear positions) plus the
+  argument that admitting it reopens the Coherence Cliff.
+| EXPLAINME §Structural Gate (bullet 2); README §The wager
+| specified (design boundary — deliverable is the precise statement)
+| — (n/a: statement-level)
+
+| [[ET-8]]ET-8
+| The blame grade `!_{blame}` is genuine L2 resource accounting, not
+  cosmetic: typing bounds assignable blame; removing it changes typability.
+| EXPLAINME §Polarity Gate (bullet 1); README §Polarity Gate
+| specified
+| — (none yet)
+
+| [[ET-9]]ET-9
+| No laundering: backward recovery `? -| A` cannot move loss into an
+  untracked position; blame is monotone along evaluation.
+| EXPLAINME §Polarity Gate (bullet 2)
+| specified
+| — (none yet)
+
+| [[ET-10]]ET-10
+| Soundness/productivity of the guarded-recursion discipline: well-typed L3
+  definitions are productive and do not break L1 totality.
+| README layer table (L3) — see 06-l3 honesty note
+| *sketched* (rules await ADR; candidate set in 06-l3)
+| — (blocked on ADR)
+
+| [[ET-11]]ET-11
+| Interaction of guarded recursion with grades: how `▶`/`next`/`fix`
+  consume and scale grades, with L2 accounting surviving the extension.
+| README §Contributing (wanted proofs list)
+| open question, specified as obligation only
+| — (blocked on ADR)
+
+| [[ET-12]]ET-12
+| Trope preservation: well-typed movement through a finite trope machine
+  stays inside `δ*` and never applies an unoffered operation.
+| EXPLAINME §Roles to tropes (bullet 1); README §Roles become tropes
+| specified
+| — (none yet)
+
+| [[ET-13]]ET-13
+| Per-API machines: each real protocol (file handle, socket, transaction,
+  stream, capability) gets its own finite machine + preservation argument.
+| EXPLAINME §Roles to tropes (bullet 2); README §Contributing
+| schema specified; instances 0/5 (file-handle exemplar in 07-tropes)
+| — (none yet)
+
+| [[ET-14]]ET-14
+| *TEA erasure*: a Total ∧ Effect-graded ∧ Affine handler erases
+  completely (observationally harmless at L0).
+| EXPLAINME §TEA erasure; README §Effects erase only when proven harmless
+| *OPEN — never cite as proven*
+| — (research target)
+
+| [[ET-15]]ET-15
+| Escape-hatch registry (standing rule): every accepted L1 escape hatch is
+  a named assumption in AFFIRMATION.adoc, never folded into "equality";
+  its taint is visible in PROOF-STATUS.
+| EXPLAINME §Totality Gate (caveat)
+| standing rule
+| enforced by the proofs gate's axiom audit
+|===
+
+== Candidate (deliberately not in the ledger)
+
+*ET-16 (candidate — L0 lowering correctness).* The prose states no
+obligation for the lowering itself (e.g. lowering preserves conversion;
+grade erasure is sound). Adopting one is a theory change → ADR first. See
+link:01-l0-runtime.adoc[01 — L0] §"A candidate obligation, not yet adopted".

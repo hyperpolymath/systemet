@@ -1,0 +1,71 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+= 05 — The Polarity Gate
+Status: specified
+:toc: left
+:sectnums:
+
+Source: root `README.adoc` §"The three gates → 3. The Polarity Gate";
+`EXPLAINME.adoc` §"The Polarity Gate".
+
+== The claim
+
+systemet admits *polarized casts*, not a universal gradual `any`:
+
+[source,text]
+----
+A -> ?     forward, lossless, forgetful
+? -| A     backward, lossy, blame-graded
+----
+
+* The forward direction is ordinary forgetting: `A -> ?` discards static
+  information and can never fail. It is semantically a retraction target —
+  no check, no cost, no blame.
+* The backward direction `? -| A` is *recovery*, and recovery is not free:
+  it is lossy, it can fail at runtime, and it carries a blame grade
+  `!_{blame}` that participates in the L2 resource accounting like any
+  other grade.
+
+There is no universal `any` that silently punches a hole through the type
+system — only directed loss, explicit polarity, and graded blame.
+
+== Blame as a grade, not an annotation
+
+`!_{blame}` is drawn from a grade algebra (per the ET-4 contract in
+link:03-l2-grades.adoc[03 — Grades]): backward casts scale their context
+through it, so a value recovered from `?` is *visibly* tainted in the type
+of everything that consumed it. This is what "part of the resource story"
+means concretely: blame flows through `+`/`·` like cost or usage, and the
+checker's ordinary grade accounting — not a bolted-on blame calculus —
+tracks who may be at fault.
+
+== The obligations
+
+[[ET-8]]*ET-8 (Blame is genuine accounting).* The blame grade `!_{blame}`
+is genuinely part of the L2 resource accounting, not cosmetic: there is a
+grade algebra of blame such that the graded typing of a program determines
+an upper bound on the blame any run can assign, and removing the blame
+grade changes the set of typable programs. Status: specified.
+
+[[ET-9]]*ET-9 (No laundering).* Backward recovery cannot launder loss into
+an untracked position: there is no context that consumes a `? -| A`
+recovery and yields a value whose type carries no blame grade, other than
+by discharging the blame through an explicit, typed handler for it.
+Equivalently: blame is monotone along evaluation — a cast failure can only
+ever be attributed to a position the static blame bound already named.
+Status: specified.
+
+== Interaction notes (non-normative)
+
+The source prose does not yet fix how the Polarity Gate composes with the
+other gates. The following are design *expectations* awaiting specification
+— they are not part of any ET obligation and must not be cited as such:
+
+* With the Structural Gate: `A -> ?` is expected to be a term-level cast,
+  not a subtyping coercion, so the refusal of deep variance is not bypassed
+  by a round-trip through `?` — the round-trip should cost blame.
+* With tropes: casting a value out of and back into a trope-governed type
+  should not be able to skip machine states (see
+  link:07-tropes.adoc[07 — Tropes]).
+
+Fixing either expectation as a rule is a theory change (ADR required).

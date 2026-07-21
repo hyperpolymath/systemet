@@ -21,14 +21,15 @@ discipline rather than added as new relations.
 *systemet is the theory, not an implementation.* It defines the semantics, the
 invariants, and the proof obligations. The reference kernel that *implements*
 systemet is a separate repository, link:https://github.com/hyperpolymath/anytype[*anytype*].
-A downstream product profile of that kernel is *AffineScript*.
+A downstream product profile of that kernel is
+link:https://github.com/hyperpolymath/affinescript[*AffineScript*].
 
 [cols="1,3",options="header"]
 |===
 | Repository | Role
 | `systemet` (this repo) | The theory — Equality Theory. Semantic authority: the spec, invariants, and proof obligations.
 | `anytype`              | The kernel — the reference engine that implements this theory. "Pick the algebra, get the discipline."
-| AffineScript          | One opinionated product profile built on the `anytype` kernel (`grade = affine + cost`).
+| link:https://github.com/hyperpolymath/affinescript[AffineScript] | One opinionated product profile built on the `anytype` kernel (`grade = affine + cost`).
 |===
 ====
 
@@ -68,7 +69,7 @@ relation set never grows.
 
 | *L3 · recursion `▶`*
 | Guarded recursion
-| specified
+| sketched — rules owed in link:docs/theory/06-l3-guarded-recursion.adoc[docs/theory/06]
 
 | *L2 · resources `□`*
 | Graded-modal substrate over a pluggable grade algebra (semiring)
@@ -244,9 +245,15 @@ graded substrate — which is the whole wager restated.
 systemet is, at this commit, a *theory written down*, not a proven one.
 
 * The semantics, the layering, the three gates, and the wager are *specified* in
-  this repository (this README and `EXPLAINME.adoc`).
+  this repository — prose orientation in this README and `EXPLAINME.adoc`, formal
+  specification per layer/gate in link:docs/theory/README.adoc[`docs/theory/`],
+  with every proof obligation numbered in the citable ledger
+  link:docs/theory/OBLIGATIONS.adoc[`docs/theory/OBLIGATIONS.adoc`] (ET-1..ET-15).
+  L3 guarded recursion is *sketched*, not fully specified — see
+  link:docs/theory/06-l3-guarded-recursion.adoc[docs/theory/06].
 * The formal proofs are *open*. The `verification/proofs/` tree holds prover
-  scaffolding (Agda/Coq/Idris2/Lean4/TLA+), not completed systemet proofs.
+  scaffolding, not completed systemet proofs; `docs/status/PROOF-STATUS.adoc`
+  is the dated evidence table.
 * L4 TEA-erasure is an *open problem*, not a result. Do not cite it as proven.
 * There is *no compiler here*. The reference kernel is link:https://github.com/hyperpolymath/anytype[anytype],
   and it is itself at an early stage.

@@ -1,0 +1,115 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+= 00 — Notation and the core calculus
+Status: specified
+:toc: left
+:sectnums:
+
+This document fixes the syntax, judgement forms, and metavariable conventions
+used by every other document in `docs/theory/`. It also pins down what "the
+intended model" means when an obligation (notably ET-3) refers to it.
+
+== Design note: why the core calculus is small
+
+The obligations in this repository are stated over the smallest calculus that
+makes each claim non-vacuous. In particular, the L1 claims (ET-1..ET-3) are
+stated over the *type-level language only*: a simply-kinded λ-calculus. This is
+deliberate. "Equality is conversion" is a claim about type-level computation;
+it does not need term-level dependency to be meaningful, and stating it over a
+minimal dependent theory would move the decidability obligation from
+achievable to research-grade without strengthening the wager. Extending the
+core (e.g. with type-level naturals and a recursor) is tracked as a stretch
+milestone in `docs/status/PROOF-STATUS.adoc`, not silently assumed here.
+
+== Kinds
+
+[source,text]
+----
+k ::= ★            the kind of (object-level) types
+    | k1 ⇒ k2      type-level functions
+----
+
+Metavariables: `k`, `k1`, `k2`, … range over kinds.
+
+== Type-level terms (the L1 language)
+
+[source,text]
+----
+A, B, F ::= a              type variable
+          | Bᵢ             base type constant (i ∈ ℕ), of kind ★
+          | A → B          object-level function type, of kind ★
+          | λa:k. A        type-level abstraction
+          | F A            type-level application
+----
+
+Conventions:
+
+* Lowercase `a`, `b` range over type variables; uppercase `A`, `B` over
+  type-level terms; `F`, `G` over type-level terms of arrow kind.
+* Binding is de Bruijn in the mechanization; named notation is used in prose.
+* `Bᵢ` gives a countable family of base constants at kind `★`, so closed
+  normal forms exist and comparison of normal forms is non-trivial.
+* The object-level arrow `A → B` is a *constructor* at kind `★`; it is not
+  the type-level function space `k1 ⇒ k2`.
+
+== Contexts
+
+[source,text]
+----
+Γ ::= ·  |  Γ, a:k
+----
+
+At L2 the context is additionally *graded*: each assumption carries a grade
+`r` drawn from the ambient grade algebra `R` (see
+link:03-l2-grades.adoc[03 — Grades]):
+
+[source,text]
+----
+Γ ::= ·  |  Γ, a :ʳ A        r ∈ R
+----
+
+== Judgement forms
+
+[cols="1,2",options="header"]
+|===
+| Judgement | Reading
+
+| `Γ ⊢ A : k`
+| Type-level term `A` has kind `k` in context `Γ` (L1 kinding).
+
+| `Γ ⊢ A ≡ B : k`
+| `A` and `B` are convertible at kind `k` — *the* equality of systemet
+  (declarative presentation: β plus equivalence and congruence closure).
+
+| `nf(A)`
+| The normal form of `A` computed by the (total) L1 normalizer.
+
+| `Γ ⊢ᵣ t : A`
+| Graded typing at L2: term `t` has type `A` using resources `r` from `Γ`.
+
+| `A@s ⟶ A@s'`
+| Trope transition: a value of type `A` moves from machine state `s` to `s'`
+  (see link:07-tropes.adoc[07 — Tropes]).
+|===
+
+== The intended model
+
+When ET-3 says conversion is sound and complete "relative to the intended
+model", the intended model is the standard set-theoretic (equivalently, the
+full type-structure) semantics of the simply-kinded λ-calculus:
+
+* `⟦★⟧` is a set containing an element for each closed normal type;
+* `⟦k1 ⇒ k2⟧ = ⟦k2⟧^⟦k1⟧` (full function space);
+* `≡` is interpreted as equality of denotations.
+
+For the β-fragment this coincides with βη-equality of normal forms up to the
+η-milestone caveat recorded in link:02-l1-equality.adoc[02 — Equality]. Any
+refinement of the intended model (e.g. to a categorical semantics for the
+graded layers) is an ADR-level change.
+
+== Source-of-truth rule
+
+The root `README.adoc` and `EXPLAINME.adoc` are the prose orientation; this
+directory is the specification; the mechanization under
+`verification/proofs/` is the evidence. A claim's status is whatever the
+*weakest* of those three says it is.

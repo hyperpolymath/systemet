@@ -1,0 +1,89 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+= 09 — Grade-algebra catalogue
+Status: specified — instance proofs land with MECH-2
+:toc: left
+:sectnums:
+
+Source: root `README.adoc` §"Disciplines as a one-line change of algebra".
+The admissibility contract these candidates must satisfy is the ET-4 law set
+in link:03-l2-grades.adoc[03 — Grades]. "Verified" below means a mechanized
+instance proof exists under `verification/proofs/lean4/Systemet/L2/Instances/`
+and PROOF-STATUS lists it; anything else is unverified, whatever the
+intuition says.
+
+== Affine — `grade = Affine`
+
+Carrier `{0, 1, ω}` (unused / exactly-once-available / unrestricted).
+
+[cols="1,3",options="header"]
+|===
+| Component | Definition
+| `+` | usage join: `0+r = r`, `1+1 = ω`, `ω` absorbs
+| `·` | scaling: `0` absorbs, `1` identity, `ω·ω = ω`, `1·ω = ω`
+| `0`, `1` | as named
+| `≤` | `0 ≤ ω`, `1 ≤ ω` (an affine assumption may stand where unrestricted is demanded — exact order is fixed by the instance proof)
+|===
+
+Law checklist: unverified → verified by `Instances/Affine.lean` (finite
+carrier — every law closes by `decide`). This is AffineScript's algebra
+(with cost, below).
+
+== Cost — `grade = Cost * Nat`
+
+Carrier `ℕ ∪ {∞}` (tropical-style): `+` = `min` (alternative bounds), `·` =
+numeric addition (sequential accumulation), `0` = `∞` (unused: no bound
+consumed), `1` = `0` (a free use)... — *this dualization is one of two
+sensible readings*; the instance proof fixes the reading, and the checklist
+is only "verified" for the reading proven.
+
+Law checklist: unverified → verified by `Instances/Tropical.lean`.
+
+== Information flow — `grade = Low <= High`
+
+Any bounded distributive lattice of security levels, instantiated at the
+two-point lattice `Low ≤ High`. The generic theorem (every bounded
+distributive lattice is a grade algebra, with `+` = meet/join per the
+polarity chosen in the instance proof) is proven once in
+`Instances/Lattice.lean`; two-point is the named instance.
+
+Law checklist: unverified → verified by `Instances/Lattice.lean`.
+
+== Probability-like — `grade = [0,1]`
+
+The unit interval as a grade of confidence/probability of use. No
+mechanized instance is planned in MECH-2 (real-interval reasoning without
+mathlib is out of the hermetic budget); status stays *unverified* and the
+row says so honestly.
+
+== Privacy — `grade = PrivacyBudget`
+
+Differential-privacy budgets (ε or (ε, δ) composition). Law checklist:
+*unverified*; contribution welcome (`[ET-L2]` issue tag), must come with
+its laws per the README's Contributing section.
+
+== Composite — `grade = Latency x Billing`
+
+The point of this row is the *construction*: if `R` and `S` are grade
+algebras then so is `R × S` componentwise. Proven generically in
+`Instances/Product.lean`; "latency × billing" is then composition of two
+cost-like algebras, not a new checker — which is ET-5's claim in miniature.
+
+Law checklist: unverified → verified by `Instances/Product.lean` (generic).
+
+== Summary table
+
+[cols="2,2,1",options="header"]
+|===
+| Algebra | Mechanization slot | Checklist status
+| Affine {0,1,ω} | `Instances/Affine.lean` | pending MECH-2
+| Cost (tropical ℕ∪{∞}) | `Instances/Tropical.lean` | pending MECH-2
+| Low ≤ High (lattice, generic) | `Instances/Lattice.lean` | pending MECH-2
+| [0,1] | — (out of hermetic budget) | unverified
+| PrivacyBudget | — (contribution welcome) | unverified
+| Latency × Billing (product, generic) | `Instances/Product.lean` | pending MECH-2
+|===
+
+When MECH-2 lands, this table's "pending" cells flip to "verified" *in the
+same PR* that makes PROOF-STATUS show the actually-run prover evidence —
+never earlier.

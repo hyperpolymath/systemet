@@ -1,0 +1,98 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+= 02 — L1 · Equality (the Totality Gate)
+Status: specified — mechanization in progress (MECH-1)
+:toc: left
+:sectnums:
+
+Source: root `README.adoc` §"The three gates → 1. The Totality Gate (L1)" and
+§"The wager"; `EXPLAINME.adoc` §"Equality Theory (the name)" and §"The
+Totality Gate (L1)".
+
+== The claim
+
+systemet keeps exactly one primitive relation at the bottom: equality. And
+equality *is conversion*:
+
+[source,text]
+----
+normalize
+compare
+done
+----
+
+For this to be a definition rather than a hope, L1 imposes the *Totality
+Gate*: every type-level function admitted at L1 terminates. A type-level
+function that does not terminate does not belong at L1 — it is rejected, not
+accommodated.
+
+== The refusals
+
+The gate is a boundary, not an omission. At L1 there is:
+
+* *no coercion language* — no `Coercion` type, no coercion terms in the
+  syntax of types;
+* *no roles* — no nominal/representational distinction threaded through
+  equality (that pressure is redirected to tropes, see
+  link:07-tropes.adoc[07 — Tropes]);
+* *no representational-equality proof calculus* — equality evidence is never
+  a term the programmer (or the compiler) manipulates;
+* *no "trust me"* — no unchecked runtime assertion that two types coincide.
+
+Contrast (from the root README): System F~c~ pushes expressive pressure
+*into* equality, which becomes a proof-carrying subsystem. systemet cuts
+earlier: equality remains conversion; discipline moves into layers.
+
+== Declarative presentation
+
+Conversion `Γ ⊢ A ≡ B : k` is the least congruence on well-kinded type-level
+terms (syntax in link:00-notation.adoc[00 — Notation]) containing β:
+
+[source,text]
+----
+(β)        Γ ⊢ (λa:k1. A) B ≡ A[a := B] : k2
+(refl)     Γ ⊢ A ≡ A : k
+(sym)      Γ ⊢ A ≡ B : k   ⟹   Γ ⊢ B ≡ A : k
+(trans)    Γ ⊢ A ≡ B : k, Γ ⊢ B ≡ C : k   ⟹   Γ ⊢ A ≡ C : k
+(cong-λ)   Γ, a:k1 ⊢ A ≡ A' : k2   ⟹   Γ ⊢ λa:k1.A ≡ λa:k1.A' : k1⇒k2
+(cong-app) Γ ⊢ F ≡ F' : k1⇒k2, Γ ⊢ A ≡ A' : k1  ⟹  Γ ⊢ F A ≡ F' A' : k2
+(cong-→)   Γ ⊢ A ≡ A' : ★, Γ ⊢ B ≡ B' : ★   ⟹   Γ ⊢ A→B ≡ A'→B' : ★
+----
+
+η-laws are the second milestone: they are *not* part of the currently
+mechanized fragment and are tracked as OPEN in
+`docs/status/PROOF-STATUS.adoc` until an η-long-normal-form development
+lands. Until then, "conversion" in the mechanized theorems means
+β-conversion as above.
+
+== The obligations
+
+[[ET-1]]*ET-1 (Totality).* Every type-level function admitted at L1
+terminates: there is a total normalization function `nf` on well-kinded
+type-level terms. In the mechanization, `nf` is defined by hereditary
+substitution and accepted total by the prover's termination checker — the
+gate is discharged *by construction*, not by a separate strong-normalization
+proof. Status: specified; mechanization slot MECH-1
+(`verification/proofs/lean4/Systemet/L1/`).
+
+[[ET-2]]*ET-2 (Decidability).* Conversion is decidable by
+normalize-then-compare: `Γ ⊢ A ≡ B : k  ⟺  nf(A) = nf(B)`, and equality of
+normal forms is decidable. Headline mechanized statement:
+`defEq_iff_nf : DefEq t u ↔ nf t = nf u` with `decDefEq` as corollary.
+Status: specified; mechanization slot MECH-1.
+
+[[ET-3]]*ET-3 (Adequacy).* Conversion-as-equality is sound and complete
+relative to the intended model (link:00-notation.adoc[00 — Notation] §"The
+intended model"). The mechanized `defEq_iff_nf` discharges the syntactic
+core (soundness `nf_sound` and completeness `nf_complete` of the normalizer
+with respect to declarative conversion); full model-theoretic adequacy,
+including the η direction, remains open and is tracked per-milestone in
+PROOF-STATUS. Status: specified; partially covered by MECH-1.
+
+[[ET-15]]*ET-15 (Escape-hatch registry — standing rule).* Any accepted L1
+escape hatch (an axiom, an unsafe boundary, a trusted normalizer extension)
+is recorded as an explicit, named assumption in `AFFIRMATION.adoc` — never
+folded silently into "equality". A hatch that is not in the registry does
+not exist; a hatch that is in the registry taints every theorem that uses
+it, and the taint must be visible in PROOF-STATUS. Status: standing rule
+(source: EXPLAINME §"The Totality Gate (L1)", caveat).
