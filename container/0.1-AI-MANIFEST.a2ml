@@ -40,7 +40,7 @@ canonical_locations:
   monitoring: "container/stapeln/vordr.toml"
   deployment: "container/stapeln/deploy.k9.ncl"
   # Just module + opt-out
-  just_module: "build/just/container.just"
+  just_module: "none"  # build/just/container.just retired with the build/ scaffolding removal
 
 ---
 ### [FILE_RELATIONSHIPS]

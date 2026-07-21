@@ -109,11 +109,10 @@ deps/
 build/
 dist/
 
-# /build/ is a tracked config directory (build orchestration: contractile.just,
-# guix.scm, just/*.just, etc.) introduced in chore/root-cleanup. Whitelist
-# root-level /build/ so its contents are tracked. The blanket `build/` rule
-# above still ignores any nested `build/` directories (e.g. Rust crate
-# target/build/) — only the root-level path is exempt.
+# Root-level /build/ is exempt from the blanket `build/` ignore above so that
+# tracked task-runner modules (e.g. build/just/proofs.just) stay tracked. The
+# Guix/contractile scaffolding that used to live here was removed; nested
+# build/ directories (e.g. Rust crate target/build/) remain ignored.
 !/build/
 !/build/**
 
