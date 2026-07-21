@@ -49,7 +49,7 @@ jobs:
           if [ ! -x "$HOME/.elan/bin/elan" ]; then
             ELAN_VERSION=4.2.3
             ELAN_SHA256=df0b2b3a439961ffcbb3985214365ffe40f49bc871df04dff268c7d8e21ca8b2
-            curl -sSfL -o /tmp/elan.tar.gz \
+            curl -sSfL --proto '=https' --tlsv1.2 -o /tmp/elan.tar.gz \
               "https://github.com/leanprover/elan/releases/download/v${ELAN_VERSION}/elan-x86_64-unknown-linux-gnu.tar.gz"
             echo "${ELAN_SHA256}  /tmp/elan.tar.gz" | sha256sum -c -
             tar -xzf /tmp/elan.tar.gz -C /tmp
