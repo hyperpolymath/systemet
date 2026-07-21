@@ -27,7 +27,7 @@ CHANGELOG.md
 CITATION.cff               # citation metadata (surfaced at root by #96)
 
 # ─── Build entry points (must live at root for their tooling) ────────────────
-Justfile                   # delegates phases to build/just/*.just
+Justfile                   # task runner entry point (self-contained since build/ scaffolding removal)
 coordination.k9            # repo-local session binding (template-mandated)
 abi.ipkg                   # Idris2 package for the ABI seam; sourcedir=src/interface (estate canon: root-level *-abi.ipkg). Single case-consistent src/interface/Abi/ dir. Typecheck: `idris2 --typecheck abi.ipkg`.
 
@@ -47,7 +47,6 @@ sonar-project.properties   # SonarCloud analysis config; the SonarQube scan acti
 .github/                   # CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md, workflows/
 .machine_readable/         # AI manifests, contractiles, custom-format configs
 .well-known/
-build/                     # contractile.just, setup.sh, guix.scm, .guix-channel, Containerfile
 ci/                        # .gitlab-ci.yml, .pre-commit-config.yaml (root shims if tools require)
 docs/                      # onboarding/, status/, governance/, ...
 docs-template/             # template-only: scaffolding docs copied into new repos

@@ -14,10 +14,6 @@ set shell := ["bash", "-uc"]
 set dotenv-load := true
 set positional-arguments := true
 
-# Import auto-generated contractile recipes (must-check, trust-verify, etc.)
-# Re-generate with: contractile gen-just
-import? "build/contractile.just"
-
 # Project metadata — customize these
 project := "rsr-template-repo"
 OWNER := "hyperpolymath"
@@ -57,29 +53,6 @@ info:
 # Run Invariant Path overlay tools for this repository
 invariant-path *ARGS:
     ./scripts/invariant-path.sh {{ARGS}}
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# INIT — see build/just/init.just
-# ═══════════════════════════════════════════════════════════════════════════════
-
-import? "build/just/init.just"
-
-# >>> container-module (three-tier: OCI · portable engine · stapeln) >>>
-# Self-contained. Remove the entire block — this and the import — with `just no-container`.
-import? "build/just/container.just"
-# <<< container-module <<<
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# GROOVE PROTOCOL — see build/just/groove.just
-# ═══════════════════════════════════════════════════════════════════════════════
-
-import? "build/just/groove.just"
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# PROJECT SELF-ASSESSMENT + OPENSSF COMPLIANCE — see build/just/assess.just
-# ═══════════════════════════════════════════════════════════════════════════════
-
-import? "build/just/assess.just"
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # BUILD & COMPILE
@@ -420,12 +393,6 @@ sbom:
     @command -v syft >/dev/null && syft . -o spdx-json > docs/security/sbom.spdx.json || echo "syft not found"
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# VALIDATION & COMPLIANCE — see build/just/validate.just
-# ═══════════════════════════════════════════════════════════════════════════════
-
-import? "build/just/validate.just"
-
-# ═══════════════════════════════════════════════════════════════════════════════
 # STATE MANAGEMENT
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -441,18 +408,6 @@ state-phase:
     @grep -oP 'phase\s*=\s*"\K[^"]+' .machine_readable/6a2/STATE.a2ml 2>/dev/null | head -1 || echo "unknown"
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# GUIX
-# ═══════════════════════════════════════════════════════════════════════════════
-
-# Enter Guix development shell (primary)
-guix-shell:
-    guix shell -D -f guix.scm
-
-# Build with Guix
-guix-build:
-    guix build -f guix.scm
-
-# ═══════════════════════════════════════════════════════════════════════════════
 # HYBRID AUTOMATION
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -462,7 +417,7 @@ automate task="all":
     case "{{task}}" in
         all) just fmt && just lint && just test && just docs && just state-touch ;;
         cleanup) just clean && find . -name "*.orig" -delete && find . -name "*~" -delete ;;
-        update) just deps && just validate ;;
+        update) just deps && just validate-claude-md && just validate-coapt ;;
         *) echo "Unknown: {{task}}. Use: all, cleanup, update" && exit 1 ;;
     esac
 
@@ -588,12 +543,6 @@ help-me:
     @echo "  https://github.com/hyperpolymath/rsr-template-repo/issues/new"
     @echo ""
     @echo "Include the output of 'just doctor' in your report."
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# FORMAL VERIFICATION (PROOFS) — see build/just/proofs.just
-# ═══════════════════════════════════════════════════════════════════════════════
-
-import? "build/just/proofs.just"
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # SESSION MANAGEMENT (THIN BINDINGS TO CENTRAL STANDARDS)
