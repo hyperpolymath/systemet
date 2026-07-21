@@ -1,0 +1,14 @@
+# MANIFEST for verification/proofs/lean4 — read by scripts/check-proofs.sh
+# <source-root>|<module-path-relative-to-source-root>|gated|<note>
+# gated = must compile; quarantine = known-broken, must keep failing.
+verification/proofs/lean4|Systemet.lean|gated|package root (import graph)
+verification/proofs/lean4|Systemet/L1/Syntax.lean|gated|MECH-1: kinds, Ty, rem/wkv/eqv toolkit, substTy
+verification/proofs/lean4|Systemet/L1/Normal.lean|gated|MECH-1: Nf/Sp, sizes, spKindLe, weakening
+verification/proofs/lean4|Systemet/L1/Hsub.lean|gated|MECH-1: hereditary substitution + normalizer (ET-1)
+verification/proofs/lean4|Systemet/L1/Conversion.lean|gated|MECH-1: DefEq, embeddings, stability nf_emb
+verification/proofs/lean4|Systemet/L2/GradeAlgebra.lean|gated|MECH-2: the ET-4 law set as a class
+verification/proofs/lean4|Systemet/L2/Instances/Affine.lean|gated|MECH-2: {0,1,omega} usage algebra
+verification/proofs/lean4|Systemet/L2/Instances/Tropical.lean|gated|MECH-2: Cost = tropical min/+
+verification/proofs/lean4|Systemet/L2/Instances/Lattice.lean|gated|MECH-2: bounded distributive lattice => grade algebra; Level
+verification/proofs/lean4|Systemet/L2/Instances/Product.lean|gated|MECH-2: componentwise product algebra (ET-5)
+verification/proofs/lean4|Systemet/Audit.lean|gated|axiom audit (#print axioms per headline)
