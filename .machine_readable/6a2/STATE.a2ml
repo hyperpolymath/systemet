@@ -6,37 +6,54 @@
 [metadata]
 project = "systemet"
 version = "0.1.0"
-last-updated = "2026-06-28"
+last-updated = "2026-07-21"
 status = "active"  # active | paused | archived
 
 [project-context]
 name = "systemet"
 purpose = "Equality Theory — the stratified type theory (L1 equality-is-conversion cut, three refusal gates, roles-as-tropes, TEA-erasure obligation) that the anytype kernel implements."
-completion-percentage = 15
+# 32, not higher: the spec + ledger + L2 mechanization + L1 totality core are
+# real, but MECH-1 milestone 2 (soundness/completeness/decDefEq), the gates
+# beyond L2, tropes, and TEA (ET-14) are all open. See docs/status/PROOF-STATUS.adoc.
+completion-percentage = 32
 
 [position]
-phase = "design"           # design | implementation | testing | maintenance | archived
+phase = "implementation"   # design | implementation | testing | maintenance | archived
 maturity = "experimental"  # experimental | alpha | beta | production | lts
 
 [route-to-mvp]
 milestones = [
   { name = "Phase 0: Split theory out of the EveryType draft; instantiate RSR repo", completion = 100 },
-  { name = "Phase 1: Specify the five layers and the three gates in prose", completion = 90 },
-  { name = "Phase 2: Formal spec of L1 (equality = conversion) + totality obligation", completion = 0 },
-  { name = "Phase 3: L2 grade-algebra laws stated precisely enough to check a candidate", completion = 0 },
-  { name = "Phase 4: Trope-preservation statement and per-API obligations", completion = 0 },
+  { name = "Phase 1: Specify the five layers and the three gates in prose", completion = 95 },
+  { name = "Phase 2: Formal spec of L1 (equality = conversion) + totality obligation", completion = 65 },
+  { name = "Phase 3: L2 grade-algebra laws stated precisely enough to check a candidate", completion = 100 },
+  { name = "Phase 4: Trope-preservation statement and per-API obligations", completion = 35 },
   { name = "Phase 5 (OPEN-A): Formal TEA-erasure proof", completion = 0 },
 ]
+# Phase 1 at 95: L3 guarded recursion is sketched, not fully specified (docs/theory/06).
+# Phase 2 at 65: spec written (docs/theory/02 + OBLIGATIONS ET-1..3); mechanized in Lean 4
+#   (verification/proofs/lean4/Systemet/L1/): hereditary substitution + normalizer total
+#   (ET-1 discharged for the core calculus), stability nf_emb proven; soundness/
+#   completeness/decDefEq remain (MECH-1 milestone 2).
+# Phase 3 at 100: GradeAlgebra law set (ET-4) + Affine/Cost/Lattice(Level)/Product
+#   instances (ET-5) proven in Lean 4, gated in CI (proofs.yml).
+# Phase 4 at 35: statement + worked file-handle machine specified (docs/theory/07);
+#   no per-API instances, no mechanization.
 
 [blockers-and-issues]
-# No external blockers. Proofs are unstarted, not blocked.
+issues = [
+  { id = 18, title = "descriptiles/6a2 migration (blocked: contractiles.mjs needs Node, estate-denied here)" },
+  { id = 19, title = "wire check-no-vlang.sh into lint after clearing template zig residue (owner: confirm the script's premise vs Zig-first directive)" },
+]
+# Downstream tracking: anytype issues #13-#19 (ET-obligation audit, 2026-07-21) +
+# anytype PR #20 echoing them; anytype #13 = refresh its systemet pin past the ET ledger.
 
 [critical-next-actions]
 actions = [
-  "Write a precise L1 specification (conversion-as-equality) and name the totality assumption.",
-  "State the L2 grade-algebra laws (semiring + ordering) a candidate grade must satisfy.",
-  "Formalise the trope-preservation obligation; pick one real API as a worked finite machine.",
-  "Keep README/EXPLAINME claims inside what is proven; TEA-erasure stays 'OPEN' until proved.",
+  "MECH-1 milestone 2: soundness (DefEq t (embNf (nf t))), completeness (DefEq t u -> nf t = nf u), decidable Nf equality => defEq_iff_nf + decDefEq (closes ET-2 for the core calculus).",
+  "Then eta-laws (ET-1..3 eta extension), then Structural Gate soundness statement (ET-6/7).",
+  "Keep README/EXPLAINME claims inside what is proven; TEA-erasure (ET-14) stays OPEN until proved.",
+  "One worked per-API trope instance (ET-12/13) after the gate work.",
 ]
 
 [maintenance-status]
