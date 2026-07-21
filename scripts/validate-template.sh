@@ -67,28 +67,18 @@ check_dir_exists() {
     fi
 }
 
-# Case-tolerant ABI seam checks: accept the canonical case-consistent
-# src/interface/Abi/ (matches `module Abi.*`) OR a lowercase src/interface/abi/
-# that some downstream repos ship. Never require BOTH (that would be a case-fold
-# collision on case-insensitive filesystems).
-check_abi_dir_exists() {
-    local description="${1:-}"
-    if [ -d "$REPO_ROOT/src/interface/Abi" ] || [ -d "$REPO_ROOT/src/interface/abi" ]; then
-        [ "$VERBOSE" = "1" ] && log_pass "Directory exists: src/interface/{Abi,abi}"
-        return 0
-    fi
-    log_error "Required directory missing: src/interface/Abi ${description:+(${description})}"
-    return 1
-}
-check_abi_file_exists() {
-    local fname="$1"
+# systemet IS-NOT check: this is a theory repo — no runnable code lives here
+# (see CLAUDE.md / EXPLAINME "Boundary"). The template's ABI/FFI seam was
+# removed; its reappearance is drift, so absence is ENFORCED, not tolerated.
+check_absent() {
+    local path="$1"
     local description="${2:-}"
-    if [ -f "$REPO_ROOT/src/interface/Abi/$fname" ] || [ -f "$REPO_ROOT/src/interface/abi/$fname" ]; then
-        [ "$VERBOSE" = "1" ] && log_pass "File exists: src/interface/{Abi,abi}/$fname"
-        return 0
+    if [ -e "$REPO_ROOT/$path" ]; then
+        log_error "IS-NOT violation: $path exists ${description:+(${description})}"
+        return 1
     fi
-    log_error "Required file missing: src/interface/Abi/$fname ${description:+(${description})}"
-    return 1
+    [ "$VERBOSE" = "1" ] && log_pass "Correctly absent: $path"
+    return 0
 }
 
 has_spdx_header() {
@@ -126,10 +116,8 @@ check_file_exists "AUDIT.adoc" "Release audit gate"
 # Directories
 check_dir_exists ".machine_readable" "Machine-readable metadata"
 check_dir_exists ".github" "GitHub community metadata"
-check_abi_dir_exists "Idris2 ABI definitions"
-check_dir_exists "src/interface/ffi" "Zig FFI implementation"
-check_dir_exists "src/interface/generated/abi" "Generated C headers"
 check_dir_exists "docs" "Documentation"
+check_dir_exists "docs/theory" "The theory spec (systemet's actual content)"
 
 #==============================================================================
 # VALIDATION PHASE 2: MACHINE-READABLE METADATA
@@ -204,22 +192,20 @@ while IFS= read -r workflow_file; do
 done <<< "$WORKFLOW_FILES"
 
 #==============================================================================
-# VALIDATION PHASE 4: ABI/FFI SOURCE FILES
+# VALIDATION PHASE 4: THEORY-REPO SHAPE (IS-NOT ENFORCEMENT)
 #==============================================================================
 
 echo ""
-log_info "Phase 4: Idris2 ABI and Zig FFI source files"
+log_info "Phase 4: theory-repo shape — no runnable code (IS-NOT)"
 echo ""
 
-# Idris2 ABI files
-check_abi_file_exists "Types.idr" "Core type definitions"
-check_abi_file_exists "Layout.idr" "Memory layout specifications"
-check_abi_file_exists "Foreign.idr" "FFI foreign declarations"
+# systemet is the theory; the template's ABI/FFI seam does not belong here.
+check_absent "src" "theory repo: no runnable code — kernel lives in anytype"
+check_absent "abi.ipkg" "removed with the ABI seam"
 
-# Zig FFI files
-check_file_exists "src/interface/ffi/build.zig" "Zig build configuration"
-check_file_exists "src/interface/ffi/src/main.zig" "Zig implementation"
-check_file_exists "src/interface/ffi/test/integration_test.zig" "Integration tests"
+# The theory spec + obligation ledger must exist.
+check_file_exists "docs/theory/OBLIGATIONS.adoc" "ET obligation ledger"
+check_file_exists "docs/theory/README.adoc" "theory index"
 
 #==============================================================================
 # VALIDATION PHASE 5: PLACEHOLDER TOKENS
@@ -252,9 +238,11 @@ echo ""
 log_info "Phase 6: SPDX License Headers"
 echo ""
 
-# Check source files for SPDX headers (excluding build artifacts)
-SOURCE_FILES=$(find "$REPO_ROOT/src" -type f \( -name "*.idr" -o -name "*.zig" \) \
-              ! -path "*/.zig-cache/*" ! -path "*/zig-cache/*" 2>/dev/null || true)
+# Check code-bearing files for SPDX headers (scripts + proof developments;
+# there is no src/ in this theory repo)
+SOURCE_FILES=$(find "$REPO_ROOT/scripts" "$REPO_ROOT/verification" -type f \
+              \( -name "*.sh" -o -name "*.lean" -o -name "*.idr" -o -name "*.agda" -o -name "*.v" \) \
+              2>/dev/null || true)
 SOURCE_COUNT=$(echo "$SOURCE_FILES" | grep -c "." || true)
 SPDX_COUNT=0
 
@@ -283,49 +271,13 @@ echo ""
 log_info "Phase 7: Build system verification"
 echo ""
 
-# Check Zig build
-if [ -f "$REPO_ROOT/src/interface/ffi/build.zig" ]; then
-    if command -v zig &> /dev/null; then
-        cd "$REPO_ROOT/src/interface/ffi"
-        if zig build 2>&1 | grep -q "error"; then
-            log_error "Zig build failed"
-        else
-            log_pass "Zig build successful"
-        fi
-        cd - > /dev/null
-    else
-        log_warning "Zig compiler not found - skipping Zig build check"
-    fi
+# There is no build system in a theory repo. The one verifiable artefact
+# class is the proof developments; those are gated by scripts/check-proofs.sh
+# (prover-absent = FAIL), not here. Defer, and say so.
+if [ -f "$REPO_ROOT/scripts/check-proofs.sh" ]; then
+    log_pass "Proof gate present (scripts/check-proofs.sh) — run it separately"
 else
-    log_error "Zig build.zig not found"
-fi
-
-# Check Idris2. Prefer a REAL typecheck via the package (abi.ipkg sets the
-# sourcedir so the `module Abi.*` namespace resolves); this catches namespace /
-# path / import breakage that a bare per-file `idris2 --check` masks as a
-# tolerated "module name does not match file name" warning.
-if command -v idris2 &> /dev/null; then
-    if [ -f "$REPO_ROOT/abi.ipkg" ]; then
-        if (cd "$REPO_ROOT" && idris2 --typecheck abi.ipkg) > /dev/null 2>&1; then
-            log_pass "Idris2 ABI typechecks (abi.ipkg)"
-        else
-            log_error "Idris2 ABI does NOT typecheck (abi.ipkg)"
-        fi
-    else
-        # No package: fall back to a best-effort per-file syntax check (warns on
-        # the expected namespace/path mismatch). Look in either case of the dir.
-        IDS_FILES=$(find "$REPO_ROOT/src/interface/Abi" "$REPO_ROOT/src/interface/abi" -name "*.idr" -type f 2>/dev/null || true)
-        while IFS= read -r ids_file; do
-            if [ -z "$ids_file" ]; then continue; fi
-            if ! idris2 --check "$ids_file" 2>&1 | grep -q "Error"; then
-                log_pass "Idris2 syntax OK: $(basename "$ids_file")"
-            else
-                log_warning "Idris2 syntax issue: $(basename "$ids_file")"
-            fi
-        done <<< "$IDS_FILES"
-    fi
-else
-    log_warning "Idris2 compiler not found - skipping Idris2 syntax checks"
+    log_warning "scripts/check-proofs.sh not present yet (lands with the mechanization PR)"
 fi
 
 #==============================================================================
@@ -336,7 +288,6 @@ echo ""
 log_info "Phase 8: Documentation requirements"
 echo ""
 
-check_file_exists "docs/developer/ABI-FFI-README.adoc" "ABI/FFI documentation"
 # TOPOLOGY may live at root or under docs/architecture/, .md or .adoc
 if [ -f "$REPO_ROOT/TOPOLOGY.adoc" ] || [ -f "$REPO_ROOT/TOPOLOGY.md" ] || \
    [ -f "$REPO_ROOT/docs/architecture/TOPOLOGY.adoc" ] || [ -f "$REPO_ROOT/docs/architecture/TOPOLOGY.md" ]; then

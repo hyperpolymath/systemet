@@ -1,118 +1,61 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
-// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= TEST-NEEDS: rsr-template-repo
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+= TEST-NEEDS: systemet
 
-== CRG Grade: C — ACHIEVED 2026-04-04
+This file previously described the rsr-template-repo's own test surface
+(Zig integration tests, template-instantiation E2E, 21-workflow validation).
+None of that is systemet's test surface. Honest restatement:
 
-== Current State (Updated 2026-04-04)
+== What systemet's test surface actually is
 
-[cols="2,1,4", options="header"]
+systemet is a prose + proof repository. There is no application code, so
+there are no unit/integration/E2E tests of behaviour. The verifiable
+surfaces are:
+
+[cols="2,2,1", options="header"]
 |===
-| Category | Count | Details
+| Surface | Checker | Current count
 
-| *Source modules* | 6 | 3 Idris2 ABI (Foreign, Layout, Types), 2 Zig FFI (build, main), 1 Zig integration test template
-| *Unit tests* | 0 | None in main source (inline tests in main.zig)
-| *Integration tests* | 1 | `test/integration_test.zig` (documented template, 1 placeholder test)
-| *E2E tests* | 1 | `tests/e2e/template_instantiation_test.sh` (full instantiation + validation)
-| *Workflow tests* | 1 | `tests/workflows/validate_workflows_test.sh` (21 workflows validated)
-| *Validation tests* | 1 | `scripts/validate-template.sh` (8-phase comprehensive validation)
-| *Benchmarks* | 5 | `benches/template_bench.sh` (validation, Zig build, tests, workflows, instantiation)
-| *Fuzz tests* | 0 | `README.adoc` scaffold with harness instructions
+| Proof checking (the real test suite)
+| `scripts/check-proofs.sh` + per-prover MANIFESTs (lands with the
+  mechanization PR; prover-absent = FAIL)
+| 0 gated proofs
+
+| Dangerous-pattern scan
+| `scripts/scan-dangerous.sh` (comment-aware)
+| pending (same PR)
+
+| Repo shape (RSR)
+| estate CI workflows + `scripts/validate-template.sh` (localized: enforces
+  the IS-NOT — src/ must NOT exist)
+| passing
+
+| Doc integrity
+| AsciiDoc-only-under-docs rule (`scripts/check-no-md-in-docs.sh`), link
+  targets in docs/theory cross-references
+| adoc rule enforced; link check manual
+
+| Status-file drift
+| PROOF-STATUS drift gate (recomputes counts from MANIFESTs; lands with the
+  mechanization PR)
+| pending
 |===
 
-== Completed Work (CRG C - Testing & Benchmarking)
+== Explicitly not needed
 
-=== Template Validation Script ✅
+* Unit/integration/E2E behaviour tests — no behaviour exists here.
+* Benchmarks — nothing to benchmark; the template's `benches/` scaffolding
+  is inert.
+* Fuzzing — no parser or runtime in this repo.
 
-* [x] `scripts/validate-template.sh` — 8-phase validation
-** Phase 1: Core repository structure (root files, directories)
-** Phase 2: Machine-readable metadata (`.machine_readable/`)
-** Phase 3: GitHub Actions workflows (17 required + all present)
-** Phase 4: Idris2 ABI and Zig FFI source files
-** Phase 5: Placeholder token replacement (skipped in template)
-** Phase 6: SPDX license headers (100% coverage, 6/6 files)
-** Phase 7: Build system verification (`zig build` + `idris2` syntax check)
-** Phase 8: Documentation requirements (TOPOLOGY, ABI-FFI-README, etc)
-* Status: *PASSING* (0 errors, 3 warnings about template placeholders)
+If runnable code ever appears in this repository, that is first an IS-NOT
+violation to resolve (the kernel belongs in anytype), not a reason to add
+tests here.
 
-=== E2E Template Instantiation Test ✅
+== Residual template artefacts (kept, inert)
 
-* [x] `tests/e2e/template_instantiation_test.sh` — full workflow
-** Clones template to temp directory
-** Replaces all `{{PLACEHOLDER}}` tokens with test values
-** Validates resulting structure with `scripts/validate-template.sh`
-** Verifies Zig build works after instantiation
-** Checks no remaining placeholders
-** Cleans up temp directory
-* Status: *READY TO TEST* (can be verified by CI)
-
-=== Workflow Validation Test ✅
-
-* [x] `tests/workflows/validate_workflows_test.sh`
-** Validates all 21 workflows exist and have proper structure
-** Checks SPDX headers, `name` field
-** Verifies all 15 required workflows present
-* Status: *PASSING* (0 errors, 15/15 required workflows found)
-
-=== Zig FFI Tests ✅
-
-* [x] `src/interface/ffi/test/integration_test.zig` — template with examples
-** Converted from `{{project}}` placeholders to "template" namespace
-** Added comprehensive comments for how to instantiate
-** Tests grouped by category (lifecycle, operations, strings, errors, version, memory safety, threading)
-** Compiles and passes placeholder test
-* Status: *PASSING* (1 test: `placeholder_test_implementation_required` passes)
-
-=== Benchmarks ✅
-
-* [x] `benches/template_bench.sh` — 5 benchmark suites
-** Validation script: ~5.8s average (3 runs)
-** Zig build: ~19ms (clean build)
-** Zig tests: ~20ms
-** Workflow validation: ~117ms
-** Template instantiation: ~427ms
-* Formats: human, json, csv
-* Status: *PASSING* (all benchmarks execute)
-
-=== Build System ✅
-
-* [x] `src/interface/ffi/build.zig` — updated for Zig 0.15.2
-** Simplified to test-only configuration
-** Supports both unit tests and integration tests
-** Works with `zig build` without errors
-* Status: *PASSING* (builds successfully)
-
-== Test Results Summary
-
-----
-Validation Script:    PASS (0 errors, 3 warnings)
-Workflow Validation:  PASS (21/21 workflows valid)
-Integration Tests:    PASS (1/1 placeholder test)
-E2E Instantiation:    READY (needs CI confirmation)
-Benchmarks:           PASS (5/5 benchmark suites)
-Build System:         PASS (zig build succeeds)
-----
-
-== CRG C Compliance
-
-* *Coverage*: 6/6 test categories (unit, integration, E2E, workflow, validation, benchmarks)
-* *Documentation*: All test files have SPDX headers + inline documentation
-* *Author Attribution*: Jonathan D.A. Jewell <6759885+hyperpolymath@users.noreply.github.com>
-* *License*: MPL-2.0 on all new files
-* *Automation*: All scripts executable + working
-
-== FLAGGED ISSUES - ALL RESOLVED
-
-* [.line-through]#*Template repo used by ALL new repos has 0 validation tests*# → FIXED: 4 test suites + validation script
-* [.line-through]#*fuzz/placeholder.txt*# → FIXED: replaced with `README.adoc` containing real harness instructions
-* [.line-through]#*No E2E tests for template instantiation*# → FIXED: full E2E test suite
-* [.line-through]#*Zig FFI integration tests are placeholders*# → FIXED: converted to documented template format
-
-== Next Steps (Future Sessions)
-
-* [ ] Integrate test scripts into CI/CD workflows
-* [ ] Generate test coverage reports
-* [ ] Add more specialized benchmarks (memory, threading stress)
-* [ ] Document test instantiation patterns for new repos
-
-== Priority: P0 (COMPLETE) ✅
+`tests/e2e.sh` (clean pass, no stack blocks enabled), `tests/aspect_tests.sh`,
+`tests/e2e/template_instantiation_test.sh`, `benches/` — template scaffolding
+retained because estate workflows reference their paths; none of them tests
+systemet content. Removing them wholesale is a follow-up decision, not a
+quiet edit.

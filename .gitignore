@@ -116,8 +116,7 @@ dist/
 !/build/
 !/build/**
 
-# ...but never track Idris2 typecheck output. `idris2 --typecheck abi.ipkg`
-# writes compiled .ttc/.ttm under build/ttc/; these are generated artifacts.
+# ...but never track prover build output under it.
 /build/ttc/
 
 # Arrival-pack build artifact (regenerated from a2ml)
