@@ -56,15 +56,14 @@ enforcement-workflow = ".github/workflows/estate-rules.yml"
 # 0-AI-MANIFEST.a2ml   AI agent work-allocation policy
 # LICENSE              Repo license (root-bound by convention)
 # CHANGELOG.md         One of the recognised .md exceptions (see below)
-# Justfile             Task runner — thin, imports per-section files from build/just/
+# Justfile             Task runner — self-contained (build/ scaffolding retired;
+#                      build/just/proofs.just returns with the proof gate)
 # coordination.k9      Repo-local session binding
 
 # === Required directories ===
 # .github/             CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md, workflows/
 # .machine_readable/   AI manifests (0.1-AI-MANIFEST.a2ml), 6a2/ checkpoints,
 #                      contractiles/, configs/, anchors/, policies/, scripts/, self-validating/
-# build/               contractile.just, guix.scm, Containerfile,
-#                      just/*.just (Justfile section imports)
 # docs/                onboarding/, status/, architecture/, governance/  (all .adoc)
 # session/             dispatch.sh, custom-checks.k9, local-hooks.sh
 # src/                 Project source (Idris2 ABI under abi/, Zig FFI under ffi/)
@@ -89,22 +88,14 @@ enforcement-workflow = ".github/workflows/estate-rules.yml"
 #
 # Enforcement: `scripts/check-no-vlang.sh`.
 
-# === Justfile structure (post-split) ===
-# The root Justfile is thin — it holds `set` directives, project metadata
-# variables, and the `default`/`help`/`info` recipes. Each major section
-# lives in its own file under build/just/ and is brought in via `import?`.
-#
-# Imported sections (in the canonical split):
-#   build/just/init.just       INIT recipe (template bootstrap)
-#   build/just/assess.just     self-assess + verify (OpenSSF compliance)
-#   build/just/validate.just   validate-rsr/state/ai-install + aggregate
-#   build/just/proofs.just     proof-check-{all,idris2,lean4,agda,coq},
-#                              proof-scan-dangerous, proof-status
-#   build/just/groove.just     Groove protocol setup (after zig removed)
-#
-# Daily-use recipes (BUILD, TEST, LINT, RUN, DEPS, DOCS, CONTAINER, CI,
-# SECURITY, STATE, GUIX, MATRIX, VERSION CONTROL, UTILITIES, SESSION)
-# stay in the root Justfile where users expect to find them.
+# === Justfile structure ===
+# The root Justfile is self-contained. The template's build/just/ section
+# split (init/assess/validate/groove) and the Guix scaffolding were retired
+# in chore/remove-guix-build-scaffolding — those recipes served the RSR
+# template lifecycle, not this repo. The one section that returns is
+# FORMAL VERIFICATION: build/just/proofs.just (proof-check-{all,lean4,…},
+# proof-scan-dangerous, proof-status) is reintroduced by the proof-gate PR
+# and imported via `import?`.
 
 # === 5-PR cleanup pattern ===
 # Apply these branches (in order) to bring a non-conforming downstream repo

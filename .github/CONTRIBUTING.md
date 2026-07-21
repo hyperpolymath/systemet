@@ -6,8 +6,8 @@ Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 git clone https://github.com/hyperpolymath/systemet.git
 cd systemet
 
-# Using Guix (recommended for reproducibility)
-guix shell -D -f guix.scm
+# Using asdf/mise (.tool-versions is the pin source)
+mise install   # or: asdf install
 
 # Or using toolbox/distrobox
 toolbox create systemet-dev
@@ -49,7 +49,6 @@ systemet/
 ├── MAINTAINERS.md
 ├── README.adoc
 ├── SECURITY.md
-├── guix.scm             # Guix package — primary (Perimeter 1)
 └── Justfile             # Task runner (Perimeter 1)
 ```
 
