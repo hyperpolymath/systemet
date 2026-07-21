@@ -545,6 +545,14 @@ help-me:
     @echo "Include the output of 'just doctor' in your report."
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# FORMAL VERIFICATION (PROOFS) — see build/just/proofs.just
+# proof-check-* delegate to scripts/check-proofs.sh: prover absent = FAIL,
+# MANIFEST-driven, coverage-enforced. Never reintroduce a skip-on-missing gate.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+import? "build/just/proofs.just"
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # SESSION MANAGEMENT (THIN BINDINGS TO CENTRAL STANDARDS)
 # ═══════════════════════════════════════════════════════════════════════════════
 

@@ -1,0 +1,70 @@
+# SPDX-License-Identifier: MPL-2.0
+# Proof gate: the same scripts/check-proofs.sh a developer runs locally.
+# Hermetic by construction — elan comes from a version-pinned release tarball
+# with a checksum, the Lean toolchain from the committed lean-toolchain file,
+# and no floating setup action is involved. A missing prover FAILS (the gate
+# never skips), so this workflow existing is what makes green mean "proved".
+name: proofs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "verification/proofs/**"
+      - "scripts/check-proofs.sh"
+      - "scripts/check-proof-status.sh"
+      - "scripts/scan-dangerous.sh"
+      - "docs/status/PROOF-STATUS.adoc"
+      - ".github/workflows/proofs.yml"
+  pull_request:
+    paths:
+      - "verification/proofs/**"
+      - "scripts/check-proofs.sh"
+      - "scripts/check-proof-status.sh"
+      - "scripts/scan-dangerous.sh"
+      - "docs/status/PROOF-STATUS.adoc"
+      - ".github/workflows/proofs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lean4:
+    name: lean4 proof gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Cache elan + toolchain (keyed on lean-toolchain pin)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v4
+        with:
+          path: ~/.elan
+          key: elan-4.2.3-${{ runner.os }}-${{ hashFiles('verification/proofs/lean4/lean-toolchain') }}
+
+      - name: Install elan (pinned tarball, checksum-verified)
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            ELAN_VERSION=4.2.3
+            ELAN_SHA256=df0b2b3a439961ffcbb3985214365ffe40f49bc871df04dff268c7d8e21ca8b2
+            curl -sSfL -o /tmp/elan.tar.gz \
+              "https://github.com/leanprover/elan/releases/download/v${ELAN_VERSION}/elan-x86_64-unknown-linux-gnu.tar.gz"
+            echo "${ELAN_SHA256}  /tmp/elan.tar.gz" | sha256sum -c -
+            tar -xzf /tmp/elan.tar.gz -C /tmp
+            /tmp/elan-init -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Install pinned Lean toolchain
+        run: elan toolchain install "$(cat verification/proofs/lean4/lean-toolchain)"
+
+      - name: Proof gate (compile + coverage + axiom audit)
+        run: ./scripts/check-proofs.sh lean4
+
+      - name: Dangerous-construct scan
+        run: ./scripts/scan-dangerous.sh
+
+      - name: Status drift gate (PROOF-STATUS must match MANIFEST)
+        run: ./scripts/check-proof-status.sh
