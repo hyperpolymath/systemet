@@ -26,3 +26,13 @@ not in a status document. Update the PROOF-STATUS ledger when adding lines.
 #print axioms Systemet.L2.BoundedDistLattice.grade
 #print axioms Systemet.L2.Level.lattice
 #print axioms Systemet.L2.prodGrade
+
+-- MECH-1 (L1) milestone 2: ET-2 — conversion is decidable
+#print axioms Systemet.L1.nf_substTy
+#print axioms Systemet.L1.substNf_substNf
+#print axioms Systemet.L1.defEq_substTy_embNf
+#print axioms Systemet.L1.soundness
+#print axioms Systemet.L1.completeness
+#print axioms Systemet.L1.defEq_iff_nf
+#print axioms Systemet.L1.decEqNf
+#print axioms Systemet.L1.decDefEq
