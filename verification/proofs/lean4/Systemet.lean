@@ -7,3 +7,7 @@ import Systemet.L2.Instances.Affine
 import Systemet.L2.Instances.Tropical
 import Systemet.L2.Instances.Lattice
 import Systemet.L2.Instances.Product
+import Systemet.L1.SubstLemmas
+import Systemet.L1.Soundness
+import Systemet.L1.Completeness
+import Systemet.L1.Decidable
