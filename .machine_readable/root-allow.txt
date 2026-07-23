@@ -76,3 +76,6 @@ ARCHITECTURE.md            # standards#505 governance sweep (PR #14)
 GOVERNANCE.md              # standards#505 governance sweep (PR #14)
 MAINTAINERS                # standards#505 governance sweep (PR #14)
 mise.toml                  # toolchain pinning from the governance sweep (PR #14)
+.hypatia-ignore
+CLAUDE.md
+flake.nix
