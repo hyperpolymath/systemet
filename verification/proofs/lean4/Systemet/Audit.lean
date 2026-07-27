@@ -7,7 +7,7 @@ import Systemet
 `scripts/check-proofs.sh lean4` runs this file and requires one
 "does not depend on any axioms" line per `#print axioms` command below
 (and no `sorryAx` anywhere in the output). A theorem that elaborates but
-smuggles in an axiom or a `sorry` through an import fails the gate here,
+smuggles in a user axiom or a `sorryAx` through an import fails the gate here,
 not in a status document. Update the PROOF-STATUS ledger when adding lines.
 -/
 
