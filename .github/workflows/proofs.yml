@@ -58,7 +58,20 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
       - name: Install pinned Lean toolchain
-        run: elan toolchain install "$(cat verification/proofs/lean4/lean-toolchain)"
+        run: |
+          set -euo pipefail
+          tc="$(cat verification/proofs/lean4/lean-toolchain)"
+          # `elan toolchain install` exits 1 with "is already installed" when the
+          # runner image already ships the pinned toolchain, which fails the gate
+          # for a reason that has nothing to do with the proofs. Install only when
+          # absent, so a genuine install failure still fails the gate.
+          # match on the first field so an annotated listing (e.g. "... (default)") still matches
+          if elan toolchain list | awk '{print $1}' | grep -qx "$tc"; then
+            echo "toolchain $tc already present"
+          else
+            elan toolchain install "$tc"
+          fi
+          elan toolchain list
 
       - name: Proof gate (compile + coverage + axiom audit)
         run: ./scripts/check-proofs.sh lean4
