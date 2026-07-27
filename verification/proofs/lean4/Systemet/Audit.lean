@@ -7,7 +7,7 @@ import Systemet
 `scripts/check-proofs.sh lean4` runs this file and requires one
 "does not depend on any axioms" line per `#print axioms` command below
 (and no `sorryAx` anywhere in the output). A theorem that elaborates but
-smuggles in an axiom or a `sorry` through an import fails the gate here,
+smuggles in a user axiom or a `sorryAx` through an import fails the gate here,
 not in a status document. Update the PROOF-STATUS ledger when adding lines.
 -/
 
@@ -26,3 +26,13 @@ not in a status document. Update the PROOF-STATUS ledger when adding lines.
 #print axioms Systemet.L2.BoundedDistLattice.grade
 #print axioms Systemet.L2.Level.lattice
 #print axioms Systemet.L2.prodGrade
+
+-- MECH-1 (L1) milestone 2: ET-2 — conversion is decidable
+#print axioms Systemet.L1.nf_substTy
+#print axioms Systemet.L1.substNf_substNf
+#print axioms Systemet.L1.defEq_substTy_embNf
+#print axioms Systemet.L1.soundness
+#print axioms Systemet.L1.completeness
+#print axioms Systemet.L1.defEq_iff_nf
+#print axioms Systemet.L1.decEqNf
+#print axioms Systemet.L1.decDefEq
