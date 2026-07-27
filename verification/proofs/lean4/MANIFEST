@@ -12,3 +12,7 @@ verification/proofs/lean4|Systemet/L2/Instances/Tropical.lean|gated|MECH-2: Cost
 verification/proofs/lean4|Systemet/L2/Instances/Lattice.lean|gated|MECH-2: bounded distributive lattice => grade algebra; Level
 verification/proofs/lean4|Systemet/L2/Instances/Product.lean|gated|MECH-2: componentwise product algebra (ET-5)
 verification/proofs/lean4|Systemet/Audit.lean|gated|axiom audit (#print axioms per headline)
+verification/proofs/lean4|Systemet/L1/SubstLemmas.lean|gated|MECH-1: ET-2 commutation toolkit (exchange laws, nf_substTy)
+verification/proofs/lean4|Systemet/L1/Soundness.lean|gated|MECH-1: ET-2 soundness (DefEq t (embNf (nf t)))
+verification/proofs/lean4|Systemet/L1/Completeness.lean|gated|MECH-1: ET-2 completeness + defEq_iff_nf
+verification/proofs/lean4|Systemet/L1/Decidable.lean|gated|MECH-1: ET-2 decEqNf/decDefEq (decidability of conversion)
