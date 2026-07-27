@@ -37,12 +37,19 @@ observable behaviour. The precise observational equivalence used at L0 is
 part of ET-14's statement and is recorded in
 link:08-l4-effects-tea.adoc[08 — TEA].
 
-== A candidate obligation, not yet adopted
+== A candidate obligation — adopted, narrowly (2026-07-27)
 
 The prose in the root README and EXPLAINME states no correctness obligation
 for the lowering itself (e.g. "lowering preserves L1 conversion" or "grade
 erasure at L0 is sound"). Adding one — call it a prospective *ET-16* — would
 be a theory change and therefore needs an ADR, per EXPLAINME §"Relationship
-to anytype and AffineScript". It is flagged in
-link:OBLIGATIONS.adoc[OBLIGATIONS.adoc] as a candidate, deliberately *not*
-numbered into the ledger.
+to anytype and AffineScript". link:../decisions/0002-l0-observational-equivalence-for-tea-erasure.adoc[ADR-0002]
+settled this on 2026-07-27, and deliberately adopted **less** than the
+candidate implied. What entered the ledger as link:OBLIGATIONS.adoc#ET-16[ET-16] is an *interface*
+obligation — every `L0Observation` instantiation discharges its laws — not a
+general lowering-correctness claim. The broader "lowering preserves L1
+conversion" remains unadopted and would need its own ADR.
+
+Crucially this does **not** give L0 a semantics: the observation relation is a
+parameter, supplied by whoever owns a real target (anytype, AffineScript).
+Everything in §"What L0 is not" above still holds.

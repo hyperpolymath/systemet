@@ -131,9 +131,25 @@ Rules of the ledger:
 | enforced by the proofs gate's axiom audit
 |===
 
-== Candidate (deliberately not in the ledger)
+== ET-16 — adopted 2026-07-27, narrowly (ADR-0002)
 
-*ET-16 (candidate — L0 lowering correctness).* The prose states no
-obligation for the lowering itself (e.g. lowering preserves conversion;
-grade erasure is sound). Adopting one is a theory change → ADR first. See
-link:01-l0-runtime.adoc[01 — L0] §"A candidate obligation, not yet adopted".
+[[ET-16]]*ET-16 (L0 observation interface).* Every `L0Observation`
+instantiation used by a downstream consumer discharges the interface laws:
+`≈` is an equivalence, is compositional with respect to the lowering's image,
+and separates the three dropped-letter counterexamples of ET-14.
+
+Status: *specified* — mechanization not started. Slot:
+`lean4/Systemet/L0/Observation.lean` (interface), then instances.
+
+This is deliberately **narrower** than the parked candidate. The broader claim
+— "lowering preserves L1 conversion" / "grade erasure at L0 is sound" —
+remains *unadopted* and would need its own ADR. L0 still has no independent
+semantics in systemet: the observation is a *parameter*, supplied by whoever
+owns a real target. See link:../decisions/0002-l0-observational-equivalence-for-tea-erasure.adoc[ADR-0002]
+and link:01-l0-runtime.adoc[01 — L0].
+
+*Consequence for downstream.* anytype and AffineScript may implement effect
+handlers, but may not advertise erasure guarantees on systemet's authority
+until they exhibit an instantiation and discharge its laws. That restriction
+is unchanged by this adoption — ET-16 names the obligation, it does not
+discharge it.

@@ -10,12 +10,12 @@ Date: 2026-07-27
 
 ## Status
 
-Proposed — **DRAFT, awaiting owner ruling. Decides nothing until accepted.**
+**Accepted** — 2026-07-27, owner ruling: **Alternative B (parametric L0
+observation)**.
 
-This ADR was drafted by an agent to convert an open-ended block into a
-decision. It is deliberately written as *alternatives with a recommendation*,
-not as a fait accompli. Nothing here may be cited as theory until the Status
-line reads `Accepted`.
+Drafted as alternatives-with-a-recommendation; the owner selected B. The
+alternatives are retained below as the considered options, per ADR practice —
+A and C are recorded as *rejected*, not as live choices.
 
 ## Context
 
@@ -65,10 +65,11 @@ having no semantics of its own.**
 
 ## Decision
 
-**Recommended: Alternative B (parametric L0 observation).** Presented against
-the two realistic competitors.
+**Adopted: Alternative B (parametric L0 observation).** Alternatives A and C
+were considered and rejected; both are recorded below with their reasoning, so
+a future reader can see what was traded away.
 
-### Alternative A — Adopt a concrete L0 semantics
+### Alternative A — Adopt a concrete L0 semantics *(rejected)*
 
 Define a small-step operational semantics for a core L0, define contextual
 equivalence over it, and adopt ET-16 in its strong form ("lowering preserves
@@ -83,7 +84,7 @@ L1 conversion; grade erasure at L0 is sound").
   being *about a fiction*: green in systemet, not transferable. Largest scope
   by a wide margin.
 
-### Alternative B — Parametric L0 observation *(recommended)*
+### Alternative B — Parametric L0 observation *(ADOPTED)*
 
 Do not fix an L0 semantics. Introduce an **interface** — an `L0Observation`
 structure: a carrier of L0 programs, a relation `≈`, and the laws that
@@ -113,7 +114,7 @@ real targets.
   wholesale, one adopts *an interface plus the obligation that every
   instantiation discharges it*.
 
-### Alternative C — Syntactic image identity
+### Alternative C — Syntactic image identity *(rejected as the definition; retained as an optional strengthening lemma)*
 
 Avoid semantics entirely: define erasure as the lowering of `handle p with h`
 being *identical* — up to α and a fixed normal form — to the lowering of the
@@ -130,9 +131,9 @@ pure residue.
 * **Suggested use.** Not as the definition, but as an **optional strengthening
   lemma** where a given instantiation happens to achieve it.
 
-### Recommendation
+### The decision
 
-Adopt **B**, with **C** retained as a lemma-level strengthening. Concretely:
+**B is adopted**, with **C** retained as a lemma-level strengthening. Concretely:
 
 1. Add `ET-16` to the ledger in a *narrow* form: "every `L0Observation`
    instantiation used by a downstream consumer discharges the interface laws",
