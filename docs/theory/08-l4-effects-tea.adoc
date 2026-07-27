@@ -47,11 +47,17 @@ data to the image. A complete statement must fix:
 1. the L4 syntax of handlers and the grading of effect operations (in terms
    of the ET-4 algebra contract);
 2. the exact formal content of T, E, and A as predicates on handlers;
-3. the observational equivalence used at L0 (see
-   link:01-l0-runtime.adoc[01 — L0]);
+3. the observational equivalence used at L0 — *FIXED 2026-07-27 by
+   link:../decisions/0002-l0-observational-equivalence-for-tea-erasure.adoc[ADR-0002]*:
+   it is the `≈` of an arbitrary `L0Observation` (link:OBLIGATIONS.adoc#ET-16[ET-16]), so ET-14 is
+   universally quantified over instantiations rather than tied to one L0
+   semantics (see link:01-l0-runtime.adoc[01 — L0]);
 4. the erasure translation itself.
 
-None of 1–4 is fixed yet; fixing them is part of the obligation. What a
+Items 1, 2 and 4 are not fixed yet; fixing them is part of the obligation.
+Item 3 is fixed (ADR-0002). ET-14 itself remains **OPEN and unproven** — an
+adopted equivalence is a prerequisite for *stating* it, not progress toward
+proving it. What a
 proof would have to show, minimally: an erasure-candidate handler can be
 eliminated by a typed translation whose correctness is proved against the
 observational equivalence of (3) — and the three letters are each load-
