@@ -102,16 +102,12 @@ clean-all: clean
 # TEST & QUALITY
 # ═══════════════════════════════════════════════════════════════════════════════
 
-# Run all tests
+# Run all tests. For a theory repo the test suite IS the proof gates:
+# compile every MANIFESTed module, package build, axiom audit, status drift.
+# An absent prover FAILS (never skips) — see scripts/check-proofs.sh.
 test *args:
-    @echo "Running tests..."
-    # TODO: Replace with your test command
-    # Examples:
-    #   cargo test {{args}}
-    #   mix test {{args}}
-    #   zig build test {{args}}
-    #   deno test {{args}}
-    @echo "Tests passed!"
+    ./scripts/check-proofs.sh lean4
+    ./scripts/check-proof-status.sh
 
 # Run tests with verbose output
 test-verbose:
@@ -214,21 +210,14 @@ fmt:
 
 # Check formatting without changes
 fmt-check:
-    @echo "Checking formatting..."
-    # TODO: Replace with your format check
-    # Examples:
-    #   cargo fmt --check
-    #   mix format --check-formatted
-    #   gleam format --check
+    @echo "fmt-check: no formatter is configured for AsciiDoc/Lean sources — NOTHING is checked here (honest no-op, not a pass)."
 
 # Run linter
 lint:
-    @echo "Linting source files..."
-    # TODO: Replace with your linter
-    # Examples:
-    #   cargo clippy -- -D warnings
-    #   mix credo --strict
-    #   gleam check
+    ./scripts/scan-dangerous.sh
+    ./scripts/check-no-md-in-docs.sh
+    ./scripts/check-root-shape.sh
+    ./scripts/validate-template.sh
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # RUN & EXECUTE
