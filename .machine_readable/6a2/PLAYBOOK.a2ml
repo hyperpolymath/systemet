@@ -79,14 +79,23 @@ enforcement-workflow = ".github/workflows/estate-rules.yml"
 #
 # Enforcement: `scripts/check-no-md-in-docs.sh` (fails if any *.md under docs/).
 
-# === Banned: ziguage ===
-# V (vlang.io) is banned estate-wide. Replaced by `zig-unified-api-adapter`
+# === Banned: the V language ===
+# V (vlang.io) is banned estate-wide. Replaced by `v-unified-api-adapter`
 # (16 endpoints + transaction-based firewall gating). Do not introduce
-# zig code, scaffolders, or references. Note that Coq theorem files use
+# V code, scaffolders, or references. Note that Coq theorem files use
 # the same `.v` extension and are unaffected — the rule looks at content
 # patterns, not the extension.
 #
-# Enforcement: `scripts/check-no-vlang.sh`.
+# Enforcement: WITHDRAWN 2026-07-27 (owner ruling). `scripts/check-no-vlang.sh`
+# and its `estate-rules` step are deleted. A rename sweep had rewritten "V" ->
+# "zig" throughout the script body AND this block, so the check was banning Zig
+# -- directly contradicting the estate's Zig-first ABI/FFI directive -- and
+# failing CI on dead template residue (.gitignore's .zig-cache/, commented-out
+# Justfile examples). The `.v`-extension caveat above is the tell: V uses `.v`,
+# Zig uses `.zig`. The V ban itself stands as policy; it is currently
+# UNENFORCED here. Re-enforcing needs a correctly-written checker -- the old one
+# cannot be salvaged by renaming, since its content patterns were corrupted too.
+# Closes the question raised in issue #19.
 
 # === Justfile structure ===
 # The root Justfile is self-contained. The template's build/just/ section
@@ -118,7 +127,6 @@ enforcement-workflow = ".github/workflows/estate-rules.yml"
 # === Reference scripts ===
 # scripts/check-root-shape.sh      Root allowlist validator
 # scripts/check-no-md-in-docs.sh   AsciiDoc-by-default validator
-# scripts/check-no-vlang.sh        zig ban validator
 # scripts/validate-template.sh     Aggregate RSR compliance (workflows, SPDX, etc.)
 
 # === Reference memory entries (for AI agents) ===

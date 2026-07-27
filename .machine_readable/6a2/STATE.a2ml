@@ -43,7 +43,6 @@ milestones = [
 [blockers-and-issues]
 issues = [
   { id = 18, title = "descriptiles/6a2 migration (blocked: contractiles.mjs needs Node, estate-denied here)" },
-  { id = 19, title = "wire check-no-vlang.sh into lint after clearing template zig residue (owner: confirm the script's premise vs Zig-first directive)" },
 ]
 # Downstream tracking: anytype issues #13-#19 (ET-obligation audit, 2026-07-21) +
 # anytype PR #20 echoing them; anytype #13 = refresh its systemet pin past the ET ledger.
