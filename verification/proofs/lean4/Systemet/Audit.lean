@@ -36,3 +36,7 @@ not in a status document. Update the PROOF-STATUS ledger when adding lines.
 #print axioms Systemet.L1.defEq_iff_nf
 #print axioms Systemet.L1.decEqNf
 #print axioms Systemet.L1.decDefEq
+
+-- MECH-1 (L1) eta extension: PARTIAL (goals 1,3 and DecidableEq only)
+#print axioms Systemet.L1.spEKindLe
+#print axioms Systemet.L1.defEq_to_defEqE
