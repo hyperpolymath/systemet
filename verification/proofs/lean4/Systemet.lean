@@ -11,3 +11,8 @@ import Systemet.L1.SubstLemmas
 import Systemet.L1.Soundness
 import Systemet.L1.Completeness
 import Systemet.L1.Decidable
+import Systemet.L1.EtaNormal
+import Systemet.L1.EtaConversion
+import Systemet.L1.EtaSubstLemmas
+import Systemet.L1.EtaHsub
+import Systemet.L1.EtaDecEq

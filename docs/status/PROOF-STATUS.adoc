@@ -12,7 +12,7 @@ summary from the per-prover MANIFESTs and fails if this file disagrees.
 
 // Machine-readable ground-truth markers — checked by scripts/check-proof-status.sh.
 // Do not edit by hand without changing the MANIFEST accordingly.
-// gate:lean4 gated=15 quarantined=0
+// gate:lean4 gated=20 quarantined=0
 
 == Summary
 
@@ -99,7 +99,7 @@ every theorem depends on nothing outside Lean's three-axiom trusted base
 | ID | Target
 
 | ET-14 | *TEA erasure — the headline open problem. Never cite as proven.*
-| ET-1..3 (η) | η-laws / η-long normal forms extension of MECH-1
+| ET-1..3 (η) | η-laws / η-long normal forms extension of MECH-1 — **PARTIAL**: η-long forms `NfE`/`SpE` (neutrals at `★` only), `DefEqE` (β+η) with `defEq_to_defEqE`, `DecidableEq` for `NfE`/`SpE`, and a cast/exchange toolkit are landed and axiom-clean. **Still open: the η-long normalizer `nfE` (blocked on an `adjWkv` weakening-exchange lemma), soundness, completeness, `defEqE_iff_nfE`, `decDefEqE`, and the anti-vacuity example.** See issue #32
 | ET-1..3 (NAT) | type-level ℕ + recursor via NbE (stretch; research-adjacent)
 | ET-6, ET-7 | Structural Gate soundness + refusal characterization
 | ET-8, ET-9 | Polarity Gate blame accounting + no-laundering
