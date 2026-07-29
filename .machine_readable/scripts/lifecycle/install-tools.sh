@@ -3,16 +3,13 @@
 #
 # install-tools.sh — Developer toolchain installer
 #
-# Detects and installs the required project toolchain (Guix or asdf).
+# Detects and installs the required project toolchain (asdf).
 
 set -euo pipefail
 
 echo "=== RSR Toolchain Installer ==="
 
-if [ -f "guix.scm" ] && command -v guix &>/dev/null; then
-    echo "Guix detected. Verifying development shell..."
-    guix shell -f guix.scm -- true && echo "Guix shell verified."
-elif [ -f ".tool-versions" ] && command -v asdf &>/dev/null; then
+if [ -f ".tool-versions" ] && command -v asdf &>/dev/null; then
     echo "asdf detected. Installing plugins and tools..."
     while read -r line; do
         plugin=$(echo "$line" | awk '{print $1}')
@@ -20,7 +17,7 @@ elif [ -f ".tool-versions" ] && command -v asdf &>/dev/null; then
     done < .tool-versions
     asdf install
 else
-    echo "No standard toolchain (Guix/asdf) detected or installed."
+    echo "No standard toolchain (asdf) detected or installed."
     echo "Please refer to README.adoc for manual setup instructions."
 fi
 

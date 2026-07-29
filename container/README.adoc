@@ -32,8 +32,9 @@ or delete — the rest.
   https://github.com/hyperpolymath/stapeln[stapeln] stack.
 |===
 
-All files use `{{PLACEHOLDER}}` tokens, replaced by `just container-init`
-(or the top-level `just init` during project bootstrap).
+All files use `{{PLACEHOLDER}}` tokens, filled in when the container stack is
+first configured (the template's `just init`/`just container-init` bootstrap
+recipes were retired with the build/ scaffolding removal).
 
 The container engine is *auto-detected* (`podman`, then `nerdctl`, then
 `docker`). Override with `CONTAINER_ENGINE=docker just container-build`.
@@ -142,12 +143,9 @@ The request path in the full stack is:
 
 == Initialise
 
-[source,bash]
-----
-just init             # full project bootstrap (all placeholders)
-# or
-just container-init   # container-only: prompts for service/port/registry
-----
+The template's `just init` / `just container-init` bootstrap recipes were
+retired with the build/ scaffolding removal; fill the `{{PLACEHOLDER}}` tokens
+by hand if the container stack is ever configured for this repo.
 
 == Everyday workflow (tiers A + B)
 
@@ -218,17 +216,11 @@ otherwise.
 
 == Removing containerisation
 
-If your project does not need containers (e.g. a pure library), strip the whole
-apparatus in one command:
-
-[source,bash]
-----
-just no-container
-----
-
-This removes `container/`, `.devcontainer/`, the `build/just/container.just`
-module and its Justfile import. Review `.github/workflows/` afterwards for any
-image build/publish jobs you no longer need.
+If your project does not need containers (e.g. a pure library), remove
+`container/` and `.devcontainer/` directly (the template's `just no-container`
+recipe and `build/just/container.just` module were retired with the build/
+scaffolding removal). Review `.github/workflows/` afterwards for any image
+build/publish jobs you no longer need.
 
 == Base images
 

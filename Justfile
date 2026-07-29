@@ -14,10 +14,6 @@ set shell := ["bash", "-uc"]
 set dotenv-load := true
 set positional-arguments := true
 
-# Import auto-generated contractile recipes (must-check, trust-verify, etc.)
-# Re-generate with: contractile gen-just
-import? "build/contractile.just"
-
 # Project metadata — customize these
 project := "rsr-template-repo"
 OWNER := "hyperpolymath"
@@ -57,29 +53,6 @@ info:
 # Run Invariant Path overlay tools for this repository
 invariant-path *ARGS:
     ./scripts/invariant-path.sh {{ARGS}}
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# INIT — see build/just/init.just
-# ═══════════════════════════════════════════════════════════════════════════════
-
-import? "build/just/init.just"
-
-# >>> container-module (three-tier: OCI · portable engine · stapeln) >>>
-# Self-contained. Remove the entire block — this and the import — with `just no-container`.
-import? "build/just/container.just"
-# <<< container-module <<<
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# GROOVE PROTOCOL — see build/just/groove.just
-# ═══════════════════════════════════════════════════════════════════════════════
-
-import? "build/just/groove.just"
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# PROJECT SELF-ASSESSMENT + OPENSSF COMPLIANCE — see build/just/assess.just
-# ═══════════════════════════════════════════════════════════════════════════════
-
-import? "build/just/assess.just"
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # BUILD & COMPILE
@@ -129,16 +102,12 @@ clean-all: clean
 # TEST & QUALITY
 # ═══════════════════════════════════════════════════════════════════════════════
 
-# Run all tests
+# Run all tests. For a theory repo the test suite IS the proof gates:
+# compile every MANIFESTed module, package build, axiom audit, status drift.
+# An absent prover FAILS (never skips) — see scripts/check-proofs.sh.
 test *args:
-    @echo "Running tests..."
-    # TODO: Replace with your test command
-    # Examples:
-    #   cargo test {{args}}
-    #   mix test {{args}}
-    #   zig build test {{args}}
-    #   deno test {{args}}
-    @echo "Tests passed!"
+    ./scripts/check-proofs.sh lean4
+    ./scripts/check-proof-status.sh
 
 # Run tests with verbose output
 test-verbose:
@@ -241,21 +210,14 @@ fmt:
 
 # Check formatting without changes
 fmt-check:
-    @echo "Checking formatting..."
-    # TODO: Replace with your format check
-    # Examples:
-    #   cargo fmt --check
-    #   mix format --check-formatted
-    #   gleam format --check
+    @echo "fmt-check: no formatter is configured for AsciiDoc/Lean sources — NOTHING is checked here (honest no-op, not a pass)."
 
 # Run linter
 lint:
-    @echo "Linting source files..."
-    # TODO: Replace with your linter
-    # Examples:
-    #   cargo clippy -- -D warnings
-    #   mix credo --strict
-    #   gleam check
+    ./scripts/scan-dangerous.sh
+    ./scripts/check-no-md-in-docs.sh
+    ./scripts/check-root-shape.sh
+    ./scripts/validate-template.sh
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # RUN & EXECUTE
@@ -420,12 +382,6 @@ sbom:
     @command -v syft >/dev/null && syft . -o spdx-json > docs/security/sbom.spdx.json || echo "syft not found"
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# VALIDATION & COMPLIANCE — see build/just/validate.just
-# ═══════════════════════════════════════════════════════════════════════════════
-
-import? "build/just/validate.just"
-
-# ═══════════════════════════════════════════════════════════════════════════════
 # STATE MANAGEMENT
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -441,18 +397,6 @@ state-phase:
     @grep -oP 'phase\s*=\s*"\K[^"]+' .machine_readable/6a2/STATE.a2ml 2>/dev/null | head -1 || echo "unknown"
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# GUIX
-# ═══════════════════════════════════════════════════════════════════════════════
-
-# Enter Guix development shell (primary)
-guix-shell:
-    guix shell -D -f guix.scm
-
-# Build with Guix
-guix-build:
-    guix build -f guix.scm
-
-# ═══════════════════════════════════════════════════════════════════════════════
 # HYBRID AUTOMATION
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -462,7 +406,7 @@ automate task="all":
     case "{{task}}" in
         all) just fmt && just lint && just test && just docs && just state-touch ;;
         cleanup) just clean && find . -name "*.orig" -delete && find . -name "*~" -delete ;;
-        update) just deps && just validate ;;
+        update) just deps && just validate-claude-md && just validate-coapt ;;
         *) echo "Unknown: {{task}}. Use: all, cleanup, update" && exit 1 ;;
     esac
 
@@ -591,6 +535,8 @@ help-me:
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # FORMAL VERIFICATION (PROOFS) — see build/just/proofs.just
+# proof-check-* delegate to scripts/check-proofs.sh: prover absent = FAIL,
+# MANIFEST-driven, coverage-enforced. Never reintroduce a skip-on-missing gate.
 # ═══════════════════════════════════════════════════════════════════════════════
 
 import? "build/just/proofs.just"

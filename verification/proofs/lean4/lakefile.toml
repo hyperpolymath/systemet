@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: MPL-2.0
+# Hermetic by design: no `require` lines — core Lean only, nothing can float.
+name = "systemet"
+defaultTargets = ["Systemet"]
+
+[[lean_lib]]
+name = "Systemet"

@@ -1,3 +1,113 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
-// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= theory Unit
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+= systemet — Theory
+The formal home of Equality Theory: one document per layer and gate, plus the citable obligation ledger.
+:toc: left
+:sectnums:
+
+This directory is the formal counterpart of the prose in the repository root
+(`README.adoc`, `EXPLAINME.adoc`). The root files are the public orientation;
+these documents are the specification. Where the two disagree, that is a bug —
+open an issue.
+
+== Status legend
+
+Every document and every obligation carries one of these statuses. The words
+mean exactly this and nothing more:
+
+[cols="1,4",options="header"]
+|===
+| Status | Meaning
+
+| `specified`
+| The statement is written down precisely enough that a proof attempt (or a
+  counterexample hunt) can begin. Nothing is proven by this status.
+
+| `sketched`
+| The discipline is described but its rules are not yet stated precisely
+  enough to attempt a proof. Below `specified`.
+
+| `mechanized`
+| A machine-checked development discharges the statement, the prover actually
+  ran (locally and in CI), and the artefact is listed in
+  `docs/status/PROOF-STATUS.adoc` with its file path. `#print axioms` (or the
+  prover's equivalent) confirms no stubbed dependency.
+
+| `OPEN`
+| The statement is a target, not a result. It must never be cited as proven,
+  in this repository or downstream.
+|===
+
+== Documents
+
+[cols="1,3,1",options="header"]
+|===
+| Document | Contents | Status
+
+| link:00-notation.adoc[00 — Notation]
+| Core-calculus syntax, judgement forms, metavariable conventions, and what
+  "the intended model" refers to. | specified
+
+| link:01-l0-runtime.adoc[01 — L0 · Runtime]
+| The lowering target and its (deliberate) lack of independent semantics. | specified
+
+| link:02-l1-equality.adoc[02 — L1 · Equality]
+| The Totality Gate: equality is conversion, normalize-then-compare, the
+  refusals, and the escape-hatch registry rule. Obligations ET-1..ET-3, ET-15. | specified
+
+| link:03-l2-grades.adoc[03 — L2 · Grades]
+| The graded-modal substrate and the precise law set a candidate grade
+  algebra must satisfy. Obligations ET-4..ET-5. | specified
+
+| link:04-l2-structural-gate.adoc[04 — L2 · Structural Gate]
+| Shallow CAR/CDR projection admitted; the refused deep-variance class; the
+  Coherence-Cliff argument. Obligations ET-6..ET-7. | specified
+
+| link:05-polarity-gate.adoc[05 — Polarity Gate]
+| Directed casts `A -> ?` / `? -| A` and the blame grade. Obligations
+  ET-8..ET-9. | specified
+
+| link:06-l3-guarded-recursion.adoc[06 — L3 · Guarded Recursion]
+| The guardedness discipline. *Sketched, not fully specified* — a candidate
+  rule set is presented and awaits an owner ADR. Obligations ET-10..ET-11. | sketched
+
+| link:07-tropes.adoc[07 — Tropes]
+| Roles replaced by finite transition machines; the preservation obligation;
+  a worked file-handle machine. Obligations ET-12..ET-13. | specified
+
+| link:08-l4-effects-tea.adoc[08 — L4 · Effects and TEA erasure]
+| The headline OPEN problem: when a Total + Effect-graded + Affine handler
+  erases completely. Obligation ET-14. | *OPEN*
+
+| link:09-grade-algebra-catalogue.adoc[09 — Grade-algebra catalogue]
+| The candidate algebras named in the README, each with a law checklist. | specified
+
+| link:OBLIGATIONS.adoc[OBLIGATIONS — the ledger]
+| The single citable list ET-1..ET-15: statement, source, status,
+  mechanization slot. | —
+|===
+
+== Obligation numbering
+
+Proof obligations are numbered `ET-1` .. `ET-15` and live in
+link:OBLIGATIONS.adoc[OBLIGATIONS.adoc]. That file is the only citable ledger:
+`docs/status/PROOF-STATUS.adoc`, downstream issues (anytype, AffineScript), and
+any paper cite obligations by `ET-n`, never by prose paraphrase. Adding,
+removing, or renumbering an obligation is a theory change and requires an ADR
+(see EXPLAINME "Relationship to anytype and AffineScript").
+
+== Authority chain
+
+[source,text]
+----
+systemet    (this repo)   the theory — semantic authority
+   |
+   v  pins, implements, may extend but not redefine
+anytype                    the reference kernel
+   |
+   v  product profile: grade = affine + cost
+AffineScript               https://github.com/hyperpolymath/affinescript
+----
+
+If implementation pressure in anytype or AffineScript forces a theory change,
+it lands here as an ADR first — never as a quiet downstream edit.

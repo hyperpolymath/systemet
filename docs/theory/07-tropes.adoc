@@ -1,0 +1,97 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+= 07 — Tropes (roles become finite machines)
+Status: specified — zero per-API instances yet; file-handle exemplar below
+:toc: left
+:sectnums:
+
+Source: root `README.adoc` §"Roles become tropes" and §"Contributing";
+`EXPLAINME.adoc` §"Roles to tropes".
+
+== The claim
+
+System F~c~ asks whether two types are representationally equal under a
+global role discipline. systemet avoids the question. Instead of a global
+`coerce`, it uses local, finite, model-checkable state transitions:
+
+[source,text]
+----
+A@t1 -> A@t2 -> A@t3
+----
+
+A *trope* is a finite transition machine attached to a type. The burden
+moves from global representational equality to explicit, local state
+movement: no `coerce`, no role inference, no hidden representational
+treaty. Tropes do not "solve roles automatically" — they relocate the
+burden to explicit, checkable state movement (EXPLAINME caveat).
+
+== Definition
+
+A trope for a type `A` is a tuple
+
+[source,text]
+----
+T(A) = (S, s₀, F, δ)
+  S   finite set of states
+  s₀  entry state
+  F   ⊆ S, final (disposal-legal) states
+  δ   ⊆ S × Op × S, the labelled transition relation,
+      Op the finite set of API operations governing A
+----
+
+The typing discipline indexes `A` by machine state: a value has type `A@s`,
+and an API operation `op` with `(s, op, s') ∈ δ` types as `A@s -> A@s'`
+(grades from L2 apply as usual — in particular, affine grading is what makes
+"the old state is gone" enforceable). Because `S` and `δ` are finite, the
+machine itself is model-checkable independently of the type system.
+
+== The obligations
+
+[[ET-12]]*ET-12 (Trope preservation).* Well-typed movement through a finite
+trope machine preserves the machine's invariants: if `Γ ⊢ v : A@s` and the
+program takes `v` to `v' : A@s'`, then the trace of operations applied lies
+in `δ*` (no undeclared transition happens), and no operation is applied to
+a value in a state where `δ` does not offer it. Status: specified.
+
+[[ET-13]]*ET-13 (Per-API machines).* Each real protocol gets its own finite
+machine and its own preservation argument: file handles, sockets, database
+transactions, web streams, WASM capabilities (README Contributing list).
+The schema is fixed here; *zero instances currently exist*. The file-handle
+machine below is the exemplar the first instance must complete (with its
+preservation argument, which is deliberately NOT claimed here).
+Status: schema specified; instances 0/5.
+
+== Exemplar: the file-handle machine (schema instance, argument owed)
+
+[source,text]
+----
+S  = { Closed, Open, Errored }
+s₀ = Closed
+F  = { Closed }
+
+δ:
+  Closed  --open-->   Open
+  Closed  --open-->   Errored      (open can fail)
+  Open    --read-->   Open
+  Open    --write-->  Open
+  Open    --close-->  Closed
+  Errored --inspect-> Errored
+  Errored --dismiss-> Closed
+----
+
+Typed API shape induced by the machine:
+
+[source,text]
+----
+open    : Path        -> FileHandle@Open | FileHandle@Errored
+read    : FileHandle@Open -> (Bytes, FileHandle@Open)
+write   : Bytes -> FileHandle@Open -> FileHandle@Open
+close   : FileHandle@Open -> FileHandle@Closed
+----
+
+With affine grading (grade algebra `Affine`, see
+link:09-grade-algebra-catalogue.adoc[09]), the input handle is consumed by
+each operation, so use-after-close is untypeable: after `close`, no value
+of type `FileHandle@Open` remains in the context. That last sentence is the
+*preservation claim for this instance* — it is what the ET-13 file-handle
+entry must prove, and it is unproven today.

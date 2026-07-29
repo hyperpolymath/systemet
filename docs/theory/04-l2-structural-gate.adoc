@@ -1,0 +1,71 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+= 04 — L2 · The Structural Gate
+Status: specified
+:toc: left
+:sectnums:
+
+Source: root `README.adoc` §"The three gates → 2. The Structural Gate (L2)";
+`EXPLAINME.adoc` §"The Structural Gate (L2)".
+
+== The claim
+
+systemet admits *shallow structural subtyping* exactly where it is just
+projection, and refuses *deep co/contravariant rewriting*:
+
+[source,text]
+----
+Shallow CAR/CDR projection is allowed.
+Deep co/contravariant rewriting is not.
+----
+
+== The admitted class
+
+Projection from an additive product `&`: given a record-like/row-like value
+offering components, a use site may *select* (CAR/CDR-style) a component or
+a width-prefix without any rewriting of the component's own type. This
+covers width-like behaviour for:
+
+* rows and records (drop fields),
+* variants (widen the set of possible tags at use sites),
+* refinement-like products (forget a conjunct).
+
+The characteristic property of the admitted class: the "subtyping" step is a
+*no-op or a projection at runtime* — it never reaches inside a component,
+never flips polarity, and never crosses a binder.
+
+== The refused class
+
+Deep variance: any rule that pushes a structural rewrite *through*
+
+* function spaces (contravariant domains),
+* effect types,
+* resource/graded modalities,
+* lifetimes,
+* linear/affine positions.
+
+These are exactly the positions where coherence starts to leak: each deep
+rule must commute with every other relation in the system, which is the
+anti-stack — the sideways accretion of inter-relation obligations the wager
+forbids (root README §"The wager"). Admitting deep variance would reopen the
+Coherence Cliff; that is the argument ET-7 owes precisely, not just by
+slogan.
+
+== The obligations
+
+[[ET-6]]*ET-6 (Shallow soundness).* Soundness of shallow structural
+CAR/CDR projection from the additive product `&`: adding the projection
+rule to L2 preserves the L2 metatheory (subject reduction and the grade
+accounting — a projected use consumes exactly the grades of the projected
+component). Status: specified.
+
+[[ET-7]]*ET-7 (Refusal characterization).* A precise characterization of
+the refused deep-variance class (the position list above, stated over the
+L2 syntax) together with the argument that admitting any of it reopens the
+Coherence Cliff — i.e. a demonstration that each deep rule induces
+inter-relation coherence obligations that grow multiplicatively with the
+feature set. This is a *design-boundary* obligation: its deliverable is a
+precise statement and argument, not a soundness proof of a rejected
+feature. A contribution that reintroduces deep variance must carry the
+counter-argument (EXPLAINME §"The Structural Gate (L2)", caveat).
+Status: specified.

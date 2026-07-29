@@ -109,16 +109,14 @@ deps/
 build/
 dist/
 
-# /build/ is a tracked config directory (build orchestration: contractile.just,
-# guix.scm, just/*.just, etc.) introduced in chore/root-cleanup. Whitelist
-# root-level /build/ so its contents are tracked. The blanket `build/` rule
-# above still ignores any nested `build/` directories (e.g. Rust crate
-# target/build/) — only the root-level path is exempt.
+# Root-level /build/ is exempt from the blanket `build/` ignore above so that
+# tracked task-runner modules (e.g. build/just/proofs.just) stay tracked. The
+# Guix/contractile scaffolding that used to live here was removed; nested
+# build/ directories (e.g. Rust crate target/build/) remain ignored.
 !/build/
 !/build/**
 
-# ...but never track Idris2 typecheck output. `idris2 --typecheck abi.ipkg`
-# writes compiled .ttc/.ttm under build/ttc/; these are generated artifacts.
+# ...but never track prover build output under it.
 /build/ttc/
 
 # Arrival-pack build artifact (regenerated from a2ml)
@@ -134,3 +132,6 @@ dist/
 
 # Coaptation re-anchor basis (occasional, generated on --reanchor when red; not a baseline)
 .machine_readable/coaptation/receipts/reanchor-basis.a2ml
+
+# Lean 4 / lake build artifacts (proofs are rebuilt by the gate, never committed)
+verification/proofs/lean4/.lake/
