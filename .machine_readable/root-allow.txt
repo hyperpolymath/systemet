@@ -50,6 +50,7 @@ ci/                        # .gitlab-ci.yml, .pre-commit-config.yaml (root shims
 docs/                      # onboarding/, status/, governance/, ...
 docs-template/             # template-only: scaffolding docs copied into new repos
 machine-readable-design/   # template-only: design rationale for .machine_readable/ layout
+.githooks/                 # vendored A2ML/K9 validation scripts run by the dogfood gate (PR #31); kept at root because git's core.hooksPath convention and the workflow both reference it there
 session/                   # dispatch.sh, custom-checks.k9, local-hooks.sh
 
 # Source / test / artifact trees (project-specific but conventional)
@@ -71,11 +72,9 @@ tools/                     # TODO: consolidate with scripts/ or document the spl
 
 # ─── Landed by merged PRs #14 (governance sweep) and #17 (mechanization) ─────
 build/                     # just modules for the proof gates (build/just/proofs.just)
-flake.nix                  # standards#505 packaging (conflicts with Guix-only CI gate — tracked repo-wide)
 ARCHITECTURE.md            # standards#505 governance sweep (PR #14)
 GOVERNANCE.md              # standards#505 governance sweep (PR #14)
 MAINTAINERS                # standards#505 governance sweep (PR #14)
 mise.toml                  # toolchain pinning from the governance sweep (PR #14)
 .hypatia-ignore
 CLAUDE.md
-flake.nix
