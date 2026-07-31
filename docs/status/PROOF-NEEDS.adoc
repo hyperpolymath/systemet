@@ -1,122 +1,60 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
-// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-// Template: rsr-template-repo/docs/status/PROOF-NEEDS.adoc
-// Authoritative master list: ~/Desktop/PROOF-REQUIREMENTS-MASTER.adoc
-= Proof Requirements — {{PROJECT}}
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+// Obligation statements: docs/theory/OBLIGATIONS.adoc. Evidence: PROOF-STATUS.adoc.
+= Proof Requirements — systemet
 
-== Proof Tier
+== Proof tier
 
-// Assign one: T1 (Critical), T2 (High), T3 (Standard), T4 (Light), T5 (Exempt)
-*Tier*: T3 — Standard
+*Tier: T1 — Critical.* This repository's entire product is a theory and its
+proofs. There is no code path to fall back on: an unproven systemet is a
+wager, not a result, and the repo's own honesty files say so.
 
-== Proof Categories
+== Proof categories
 
 [cols="1,3,1", options="header"]
 |===
 | Code | Meaning | Applies?
 
-| *TP* | Typing Proofs (type soundness, type safety) | Yes
-| *INV* | Invariant Proofs (state machines, monotonicity, bounds) |
-| *SEC* | Security Proofs (crypto, injection freedom, access control) |
-| *CONC* | Concurrency Proofs (linearizability, deadlock freedom) |
-| *ALG* | Algorithm Proofs (termination, correctness, bounds) |
-| *ABI* | ABI/FFI Proofs (memory layout, pointer safety, platform compat) | Yes
-| *DOM* | Domain-Specific Proofs (bespoke to this project) |
+| *TP* | Typing proofs (type soundness, safety) | Yes — as DOM (the theory *is* a type system)
+| *INV* | Invariant proofs | Yes — trope machines (ET-12, ET-13)
+| *SEC* | Security proofs | No (no code)
+| *CONC* | Concurrency proofs | No (no code)
+| *ALG* | Algorithm proofs (termination, correctness) | Yes — normalizer totality + decidability (ET-1, ET-2)
+| *ABI* | ABI/FFI proofs | *No — the ABI seam was removed; systemet has no FFI. The template's ABI-1..5/TP-1..2 rows are retired.*
+| *DOM* | Domain-specific proofs | Yes — the ET ledger is the master list
 |===
 
-== Mandatory Proofs (All RSR Repos)
+== The master list
 
-These proofs come from the rsr-template-repo and MUST be present in every repo:
+The authoritative, citable requirements are the fifteen obligations
+*ET-1..ET-15* in `docs/theory/OBLIGATIONS.adoc`, with:
 
-=== ABI/FFI Boundary Proofs (Idris2)
+* mechanization slots MECH-1 (L1 conversion) and MECH-2 (grade-algebra laws)
+  targeted first — see PROOF-STATUS §Mechanization slots;
+* ET-14 (TEA erasure) explicitly OPEN — a research target, not a milestone
+  with a date;
+* ET-10/ET-11 blocked on the L3 ADR
+  (`docs/theory/06-l3-guarded-recursion.adoc`);
+* prospective ET-16 (L0 lowering correctness) requires an ADR before it may
+  be added.
 
-[cols="1,3,1,3", options="header"]
+Do not duplicate the statements here: one ledger, one place to drift.
+
+== Dangerous patterns (still fully applicable)
+
+Gated proof files must be free of prover escape hatches:
+
+[cols="1,2", options="header"]
 |===
-| # | Proof | Status | File
+| Prover | Banned
 
-| ABI-1 | Non-null pointer proofs (`So (ptr /= 0)`) | Needed | `verification/proofs/idris2/ABI/Pointers.idr`
-| ABI-2 | Memory layout correctness (`HasSize`, `HasAlignment`) | Needed | `verification/proofs/idris2/ABI/Layout.idr`
-| ABI-3 | Platform type size proofs (per platform) | Needed | `verification/proofs/idris2/ABI/Platform.idr`
-| ABI-4 | FFI function return type proofs | Needed | `verification/proofs/idris2/ABI/Foreign.idr`
-| ABI-5 | C ABI compliance (`CABICompliant`, `FieldsAligned`) | Needed | `verification/proofs/idris2/ABI/Compliance.idr`
-|===
-
-=== Typing Proofs (Prover Varies)
-
-[cols="1,3,1,3", options="header"]
-|===
-| # | Proof | Status | File
-
-| TP-1 | Core data type well-formedness | Needed | `verification/proofs/idris2/Types.idr`
-| TP-2 | Public API type safety (exported functions) | Needed | `verification/proofs/lean4/ApiTypes.lean`
-|===
-
-== Project-Specific Proofs
-
-// Fill in proofs specific to this project. Copy from PROOF-REQUIREMENTS-MASTER.adoc
-// Delete this section for T4/T5 repos
-
-[cols="1,3,1,1,1,2", options="header"]
-|===
-| # | Proof Needed | Category | Prover | Priority | File(s)
-
-| | | | | |
+| Lean4 | `sorry`, `admit`, `axiom` (in gated files), `native_decide`
+| Idris2 | `believe_me`, `assert_total`, `postulate`
+| Agda | `postulate`, `TERMINATING`/`NON_TERMINATING` pragmas
+| Coq | `Admitted`, `Axiom` (in gated files)
 |===
 
-== Dangerous Patterns (BANNED)
-
-The following MUST NOT appear anywhere in proof files:
-
-[cols="2,2,3", options="header"]
-|===
-| Pattern | Language | Meaning
-
-| `believe_me` | Idris2 | Unsafe cast / trust-me
-| `assert_total` | Idris2 | Skip totality check
-| `postulate` | Idris2/Agda | Unproven axiom
-| `sorry` | Lean4 | Incomplete proof
-| `Admitted` | Coq | Incomplete proof
-| `unsafeCoerce` | Haskell | Unsafe type cast
-| `Obj.magic` | OCaml/ReScript | Unsafe type cast
-| `unsafe` (unaudited) | Rust | Unsafe block without safety comment
-|===
-
-CI will reject any PR introducing these patterns (enforced by `panic-attack assail`).
-
-== Prover Selection Guide
-
-[cols="2,2,3", options="header"]
-|===
-| Use Case | Recommended Prover | Why
-
-| ABI/FFI boundaries | *Idris2* | Dependent types model layouts precisely
-| Type system proofs | *Coq* or *Lean4* | Mature proof assistants for metatheory
-| Algebraic properties | *Lean4* | Good mathlib support
-| Inductive/coinductive | *Agda* | Native support for (co)induction
-| Distributed systems | *TLA+* | Model checking for protocols
-| Numerical properties | *Isabelle* | Strong real analysis library
-|===
-
-== Proof File Locations
-
-----
-verification/proofs/
-├── idris2/          # Idris2 proofs (ABI, dependent types)
-│   ├── ABI/         # ABI-specific proofs
-│   └── *.idr        # Project-specific Idris2 proofs
-├── lean4/           # Lean4 proofs (algebra, lattices)
-│   └── *.lean
-├── agda/            # Agda proofs (induction, metatheory)
-│   └── *.agda
-├── coq/             # Coq proofs (type systems, compilation)
-│   └── *.v
-└── tlaplus/         # TLA+ specs (distributed protocols)
-    └── *.tla
-----
-
-== References
-
-* Master list: `~/Desktop/PROOF-REQUIREMENTS-MASTER.adoc`
-* Proof status tracking: `PROOF-STATUS.adoc` (this repo)
-* Proven library: `proven` repo (Idris2 verified foundations)
-* Template: `rsr-template-repo/docs/status/PROOF-NEEDS.adoc`
+Enforcement is mechanical: `scripts/scan-dangerous.sh` (comment-aware) and
+the Lean4 transitive axiom audit (`Systemet/Audit.lean`). An escape hatch
+that survives review anyway becomes a *named assumption* under the ET-15
+registry rule — never a silent pass.

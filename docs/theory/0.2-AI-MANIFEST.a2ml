@@ -8,16 +8,27 @@ parent: "../0.1-AI-MANIFEST.a2ml"
 ---
 ### [AI_MANIFEST]
 description: |
-  Documentation track for domain-specific theory and research foundations.
-  Categorised by discipline.
+  The formal home of Equality Theory: one document per layer and gate, plus
+  the citable proof-obligation ledger (ET-1..ET-15). This directory is the
+  specification; the root README/EXPLAINME are the prose orientation; the
+  mechanization under verification/proofs/ is the evidence.
 
 canonical_locations:
-  ontologies: "ontologies/"
-  mathematics: "mathematics/"
-  computing: "computing/"
-  socio_technical: "socio-technical/"
-  formalisms: "formalisms/"
-  other: "other/"
+  index: "README.adoc"
+  notation: "00-notation.adoc"
+  l0_runtime: "01-l0-runtime.adoc"
+  l1_equality: "02-l1-equality.adoc"
+  l2_grades: "03-l2-grades.adoc"
+  l2_structural_gate: "04-l2-structural-gate.adoc"
+  polarity_gate: "05-polarity-gate.adoc"
+  l3_guarded_recursion: "06-l3-guarded-recursion.adoc"
+  tropes: "07-tropes.adoc"
+  l4_effects_tea: "08-l4-effects-tea.adoc"
+  grade_algebra_catalogue: "09-grade-algebra-catalogue.adoc"
+  obligation_ledger: "OBLIGATIONS.adoc"
 
 invariants:
-  - "Theoretical claims MUST reference established academic or technical formalisms"
+  - "OBLIGATIONS.adoc is the only citable ledger; cite ET-n, never a paraphrase"
+  - "Adding/removing/renumbering an obligation is a theory change (ADR required)"
+  - "ET-14 (TEA erasure) is OPEN and must never be cited as proven"
+  - "A claim's status is the weakest of prose, spec, and mechanization"

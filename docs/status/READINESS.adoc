@@ -3,11 +3,11 @@
 = systemet Component Readiness Assessment
 
 *Standard:* link:https://github.com/hyperpolymath/standards/tree/main/component-readiness-grades[Component Readiness Grades (CRG) v2.0 STRICT] +
-*Assessed:* 2026-06-28 +
-*Assessor:* Jonathan D.A. Jewell +
-*Previous assessment:* _<date or "none">_
+*Assessed:* 2026-07-21 +
+*Assessor:* Claude (spec-completion session), pending owner countersign +
+*Previous assessment:* 2026-06-28 (grade X, placeholders unfilled)
 
-*Current Grade:* X
+*Current Grade:* E
 
 This line is parsed by `just crg-grade` / `just crg-badge`. The grade above is
 the worst-graded in-scope component — *the project's weakest link sets its
@@ -59,20 +59,19 @@ Below B, any publication must be explicitly abstract or provisional.
 
 '''
 
-== 2. Headline Evidence (as of 2026-06-28)
+== 2. Headline Evidence (as of 2026-07-21)
 
 [cols="2,3,3", options="header"]
 |===
 | Metric | Value | Source
 
-| Test count | _<N>_ | `.machine_readable/6a2/STATE.a2ml` or CI
-| Formal-verification posture | _<N `believe_me` / `sorry` / `Admitted` — irreducible only>_ | grep of proof dirs
-| Dangerous patterns (`assert_total`, `unsafeCoerce`, `Obj.magic`) | _<N>_ | grep 2026-06-28
-| Per-unit README coverage | _<M/N (percentage)>_ | filesystem scan of unit dirs
-| CI status | _<workflow name + last green run>_ | `.github/workflows/`
-| RSR mandatory workflows | _<N/17>_ | `.github/workflows/`
-| Third-party badges (if any) | _<e.g. Glama AAA; Scorecard N/10>_ | external
-| LIVE deployment (if any) | _<URL + last health check>_ | production
+| Test count | 0 behavioural tests (theory repo — see TEST-NEEDS); 0 gated proofs | `docs/status/TEST-NEEDS.adoc`, `PROOF-STATUS.adoc`
+| Formal-verification posture | 0 completed proofs; 0 escape hatches in proof files (no proof files exist yet — template stubs removed) | grep of `verification/proofs/` 2026-07-21
+| Dangerous patterns (`assert_total`, `unsafeCoerce`, `sorry`, …) | 0 in code/proof files (prose mentions in the banned-pattern lists only) | grep 2026-07-21
+| Theory spec coverage | 12 docs in `docs/theory/` incl. OBLIGATIONS ledger ET-1..ET-15; L3 sketched (ADR pending); ET-14 OPEN | `docs/theory/`
+| CI status | estate workflows present; 29 workflow files; no proof gate yet (lands with mechanization PR) | `.github/workflows/`
+| Third-party badges | none claimed | —
+| LIVE deployment | n/a (theory repo) | —
 |===
 
 '''
@@ -87,9 +86,9 @@ unless noted.
 |===
 | Component | Grade | Posture | Evidence Summary | Promotion blocker | Last Assessed
 
-| _<component 1>_ | X/F/E/D/C/B/A | _<shorthand>_ | _<what was checked + counts>_ | _<specific, actionable gap to next grade>_ | 2026-06-28
-| _<component 2>_ | … | … | … | … | 2026-06-28
-| _<component 3>_ | … | … | … | … | 2026-06-28
+| Theory spec (`docs/theory/`, 12 docs) | E | `pre-alpha` | Layers/gates specified; ET-1..ET-15 ledger citable; L3 only sketched; zero proofs discharged | Land MECH-1/MECH-2 with real prover runs; L3 ADR | 2026-07-21
+| Mechanization (`verification/proofs/`) | X | — | Empty by design after stub purge; MANIFEST-gated development staged | Mechanization PR: gate first (watched-to-fail), then MECH-2, MECH-1 | 2026-07-21
+| Repo scaffolding (RSR shape) | D | `alpha-unstable` | root-allow enforced; IS-NOT (no src/) now validator-enforced; status files localized to systemet | Estate reusable-workflow rot is upstream; proof gate missing until mechanization PR | 2026-07-21
 |===
 
 *Rules of thumb for populating this table:*
@@ -164,12 +163,19 @@ Real-world external feedback confirming value. Populate
 
 '''
 
-== 7. Summary (2026-06-28)
+== 7. Summary (2026-07-21)
 
-* Project grade: _<grade>_. Why: _<1-2 line justification>_.
-* Delta since last assessment: _<what changed; none if first assessment>_.
-* Next milestone: _<specific promotion target + timeline>_.
-* Machine-readable grade line present (§ header) for `just crg-grade` / `just crg-badge`.
+* Project grade: *E (Minimal/Salvageable, pre-alpha)*. Why: the theory is now
+  genuinely specified (docs/theory + citable ET ledger) and the repo shape is
+  honest, but zero proofs are discharged and the proof gate is not yet wired —
+  nothing is validated beyond repository well-formedness.
+* Delta since 2026-06-28: grade X→E; template residue purged (src/ ABI seam,
+  generic proof stubs, {{PROJECT}} status files); docs/theory populated;
+  L3 honestly downgraded to sketched.
+* Next milestone: D requires the proof gate + MECH-2/MECH-1 landed with
+  actually-run provers and counts cited in STATE.a2ml.
+* Machine-readable grade line present (§ header) for `just crg-grade` /
+  `just crg-badge`.
 
 '''
 

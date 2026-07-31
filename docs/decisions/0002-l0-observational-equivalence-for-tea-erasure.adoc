@@ -1,0 +1,196 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Architecture Decision Record: 0002-l0-observational-equivalence-for-tea-erasure
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
+<!-- Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk> -->
+
+# 2. L0 observational equivalence for TEA erasure (prospective ET-16)
+
+Date: 2026-07-27
+
+## Status
+
+**Accepted** — 2026-07-27, owner ruling: **Alternative B (parametric L0
+observation)**.
+
+Drafted as alternatives-with-a-recommendation; the owner selected B. The
+alternatives are retained below as the considered options, per ADR practice —
+A and C are recorded as *rejected*, not as live choices.
+
+## Context
+
+### The block
+
+`docs/theory/08-l4-effects-tea.adoc` states ET-14 (TEA erasure) and lists four
+things a complete statement must fix. Item (3) is **the observational
+equivalence used at L0**. ET-14 cannot be *stated*, let alone proved, until
+(3) is settled — so (3) gates the headline open problem, and through it
+anytype's Phase 6.
+
+### Why it is not merely a definition
+
+`docs/theory/01-l0-runtime.adoc` makes a deliberate architectural commitment:
+
+> L0 deliberately has *no independent semantics within systemet*. No typing
+> judgement is defined at L0. No systemet obligation quantifies over L0
+> programs directly. Obligations reference L0 only through the lowering
+> function's image.
+
+But an observational equivalence *is* a semantics — at minimum a notion of
+observation. So item (3) cannot be answered without either reversing that
+commitment or finding a formulation that respects it. That is a theory
+change, which is why the same document parks a prospective **ET-16** as a
+*candidate deliberately not numbered into the ledger*, pending this ADR.
+
+The tension in one line: **ET-14 needs an L0 observation; L0 is defined by
+having no semantics of its own.**
+
+### Constraints any answer must respect
+
+1. **The authority chain.** systemet (theory) → anytype (kernel) →
+   AffineScript (product). systemet has no runnable code by design; anytype
+   and AffineScript own the real targets (typed WASM, C). A commitment made
+   here propagates downstream and is expensive to retract.
+2. **Honesty rules.** ET-14 may not be described as proven or "in progress"
+   without a prover-checked artefact under `verification/proofs/`. Whatever is
+   adopted must be mechanizable, not merely stateable.
+3. **The three letters must stay load-bearing.** Dropping any of T, E, A must
+   admit a counterexample, and the counterexamples are part of the
+   development — so the chosen equivalence must be *fine enough to
+   distinguish* those three failures. An equivalence too coarse makes ET-14
+   true for the wrong reason.
+4. **What "erases" means, per the existing prose:** the handler "contributes
+   no code and no data to the L0 image beyond what the un-effectful program
+   would have produced".
+
+## Decision
+
+**Adopted: Alternative B (parametric L0 observation).** Alternatives A and C
+were considered and rejected; both are recorded below with their reasoning, so
+a future reader can see what was traded away.
+
+### Alternative A — Adopt a concrete L0 semantics *(rejected)*
+
+Define a small-step operational semantics for a core L0, define contextual
+equivalence over it, and adopt ET-16 in its strong form ("lowering preserves
+L1 conversion; grade erasure at L0 is sound").
+
+* **Positive.** Strongest and most conventional; ET-14 becomes an ordinary
+  compiler-correctness theorem with abundant prior art. Permits reasoning
+  about the lowering itself, not just erasure.
+* **Negative.** systemet acquires and must maintain an L0 semantics — a large
+  artefact, and a reversal of the stated architecture. Worse, the model L0
+  will not be anytype's or AffineScript's real target, so the proofs risk
+  being *about a fiction*: green in systemet, not transferable. Largest scope
+  by a wide margin.
+
+### Alternative B — Parametric L0 observation *(ADOPTED)*
+
+Do not fix an L0 semantics. Introduce an **interface** — an `L0Observation`
+structure: a carrier of L0 programs, a relation `≈`, and the laws that
+relation must satisfy (equivalence; compositionality with respect to the
+lowering's image; and a separation law strong enough to distinguish the three
+counterexamples). State and prove ET-14 **for every** structure satisfying
+that interface. Downstream, anytype and AffineScript instantiate it for their
+real targets.
+
+* **Positive.** Preserves the "no independent L0 semantics" commitment
+  exactly: the semantics becomes a *parameter*, never a commitment.
+  **It reuses this repo's own proven idiom** — ET-4 is already discharged as
+  `Systemet.L2.GradeAlgebra`, "the law set as a class whose fields *are* the
+  proof obligations", with four instances and a generic product construction,
+  all mechanized and green. The same trick applied to observation is not a new
+  invention; it is the house pattern. Scope is bounded and Lean-shaped.
+  Defers the WASM/C commitment to the repos that actually have targets, which
+  is what the authority chain already says.
+* **Negative.** The theorem is conditional: it bites only once someone
+  discharges the interface for a real target, so anytype/AffineScript inherit
+  a proof obligation. The interface must be designed carefully — too weak and
+  ET-14 becomes vacuous; too strong and no real target satisfies it. **This
+  design risk is the substance of the work and must not be waved away**; a
+  vacuity check (exhibit at least one instantiation, and at least one
+  non-instance) belongs in the development.
+* **Neutral.** ET-16 shrinks: instead of adopting "L0 lowering correctness"
+  wholesale, one adopts *an interface plus the obligation that every
+  instantiation discharges it*.
+
+### Alternative C — Syntactic image identity *(rejected as the definition; retained as an optional strengthening lemma)*
+
+Avoid semantics entirely: define erasure as the lowering of `handle p with h`
+being *identical* — up to α and a fixed normal form — to the lowering of the
+pure residue.
+
+* **Positive.** Smallest possible; no observation relation needed; closest to
+  the literal existing wording ("contributes no code and no data"); soonest to
+  mechanize.
+* **Negative.** Almost certainly too strong to be true of any realistic
+  lowering (instruction ordering, register allocation, calling conventions all
+  perturb the image), so it would be provable only for a toy lowering and
+  would not transfer. It also mis-states the intent: erasure should permit
+  *equivalent* code, not demand *identical* code.
+* **Suggested use.** Not as the definition, but as an **optional strengthening
+  lemma** where a given instantiation happens to achieve it.
+
+### The decision
+
+**B is adopted**, with **C** retained as a lemma-level strengthening. Concretely:
+
+1. Add `ET-16` to the ledger in a *narrow* form: "every `L0Observation`
+   instantiation used by a downstream consumer discharges the interface laws",
+   rather than a general lowering-correctness claim.
+2. Fix ET-14 item (3) as: *the equivalence is the `≈` of an arbitrary
+   `L0Observation`*, making ET-14 a statement universally quantified over
+   instantiations.
+3. Sequence the mechanization: interface → vacuity check (one instance, one
+   non-instance) → the three dropped-letter counterexamples → the erasure
+   translation → ET-14 itself. **The counterexamples come early on purpose**:
+   they are the cheapest test that the interface is fine enough to be worth
+   proving anything about.
+
+## Consequences
+
+### Positive
+
+- Unblocks ET-14's *statement*, and with it anytype Phase 6 planning.
+- Keeps systemet free of runnable code and of a semantics it would have to
+  maintain against two moving backends.
+- Reuses a mechanization pattern already proven green in this repo (ET-4/ET-5).
+- Bounded, checkable increments — each step has a `lake build` oracle, the same
+  property that made ET-2 tractable.
+
+### Negative
+
+- anytype and AffineScript inherit an obligation: to claim erasure on
+  systemet's authority they must exhibit an instantiation and discharge its
+  laws. Today they may implement handlers but **may not advertise erasure
+  guarantees** — that restriction stays until an instantiation exists.
+- Interface design is the hard part and can fail late: a too-weak interface
+  yields a true-but-vacuous ET-14. The vacuity check exists to fail fast.
+
+### Neutral
+
+- ET-16 enters the ledger narrower than the parked candidate implied; the
+  broader "lowering preserves L1 conversion" claim remains unadopted and would
+  need its own ADR.
+- No change to L0's status as a lowering target with no typing judgement.
+
+## What this ADR does not decide
+
+Explicitly out of scope, and still owner-only:
+
+- The L4 handler syntax and effect-operation grading — ET-14 item (1).
+- The formal content of T, E and A as predicates — ET-14 item (2).
+- The erasure translation — ET-14 item (4).
+- The **L2 join law**, absent from the grade algebra, and **L3 guardedness**,
+  sketched in `06-l3-guarded-recursion.adoc`. Both are separately ADR-gated and
+  neither is resolved here.
+
+## References
+
+- `docs/theory/08-l4-effects-tea.adoc` — ET-14 and its four unfixed items
+- `docs/theory/01-l0-runtime.adoc` — "What L0 is not"; the parked ET-16 candidate
+- `docs/theory/OBLIGATIONS.adoc` — the ledger; ET-16 under "Candidate
+  (deliberately not in the ledger)"
+- `docs/theory/03-l2-grades.adoc`, `09-grade-algebra-catalogue.adoc` — the
+  ET-4 law-set-as-a-class idiom this recommendation reuses
+- `verification/proofs/lean4/Systemet/L2/GradeAlgebra.lean` — that idiom, mechanized

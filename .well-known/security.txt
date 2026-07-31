@@ -2,10 +2,9 @@
 # RFC 9116 - security.txt
 # https://securitytxt.org/
 
-Contact: mailto:{{SECURITY_EMAIL}}
+Contact: mailto:security@metadatastician.art
 Expires: 2026-12-31T23:59:59.000Z
-Encryption: {{PGP_KEY_URL}}
+Encryption: https://metadatastician.art/.well-known/pgp-key.txt
 Preferred-Languages: en
 Canonical: https://github.com/hyperpolymath/systemet/.well-known/security.txt
 Policy: https://github.com/hyperpolymath/systemet/blob/main/SECURITY.md
-Hiring: https://{{WEBSITE}}/careers

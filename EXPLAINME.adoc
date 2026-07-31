@@ -165,9 +165,9 @@ infrastructure being part of the theory.
 How this is implemented:
 
 * `0-AI-MANIFEST.a2ml` is the AI-agent entry point; `.machine_readable/` holds
-  metadata, policy, contractiles, anchors, and agent-readable state; `just validate`
-  checks repository shape; `AFFIRMATION.adoc` is the dated honesty snapshot;
-  `AUDIT.adoc` is the release gate.
+  metadata, policy, contractiles, anchors, and agent-readable state; CI estate
+  workflows check repository shape; `AFFIRMATION.adoc` is the dated honesty
+  snapshot; `AUDIT.adoc` is the release gate.
 
 Caveat:
 

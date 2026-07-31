@@ -4,24 +4,6 @@ Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 -->
 # Security Policy
 
-<!-- 
-============================================================================
-TEMPLATE INSTRUCTIONS (delete this block before publishing)
-============================================================================
-Replace all {{PLACEHOLDER}} values with your information:
-  systemet     - Your project name
-  hyperpolymath            - GitHub username or org (e.g., hyperpolymath)
-  systemet             - Repository name
-  {{SECURITY_EMAIL}}   - Security contact email
-  {{PGP_FINGERPRINT}}  - Your PGP key fingerprint (40 chars, no spaces)
-  {{PGP_KEY_URL}}      - URL to your public PGP key
-  {{WEBSITE}}          - Your website/domain
-  2026     - Current year for copyright
-
-Optional: Remove sections that don't apply (e.g., PGP if you don't use it)
-============================================================================
--->
-
 We take security seriously. We appreciate your efforts to responsibly disclose vulnerabilities and will make every effort to acknowledge your contributions.
 
 ## Table of Contents
@@ -62,19 +44,19 @@ If you cannot use GitHub Security Advisories, you may email us directly:
 
 | | |
 |---|---|
-| **Email** | {{SECURITY_EMAIL}} |
-| **PGP Key** | [Download Public Key]({{PGP_KEY_URL}}) |
-| **Fingerprint** | `{{PGP_FINGERPRINT}}` |
+| **Email** | security@metadatastician.art |
+| **PGP Key** | [Download Public Key](https://metadatastician.art/.well-known/pgp-key.txt) |
+| **Fingerprint** | `ABF3ECD932C2A04345EC9B3D2E725C6B831EA2B8` |
 
 ```bash
 # Import our PGP key
-curl -sSL {{PGP_KEY_URL}} | gpg --import
+curl -sSL https://metadatastician.art/.well-known/pgp-key.txt | gpg --import
 
 # Verify fingerprint
-gpg --fingerprint {{SECURITY_EMAIL}}
+gpg --fingerprint ABF3ECD932C2A04345EC9B3D2E725C6B831EA2B8
 
 # Encrypt your report
-gpg --armor --encrypt --recipient {{SECURITY_EMAIL}} report.txt
+gpg --armor --encrypt --recipient ABF3ECD932C2A04345EC9B3D2E725C6B831EA2B8 report.txt
 ```
 
 > **⚠️ Important:** Do not report security vulnerabilities through public GitHub issues, pull requests, discussions, or social media.
@@ -374,7 +356,7 @@ When using systemet, we recommend:
 
 ## Additional Resources
 
-- [Our PGP Public Key]({{PGP_KEY_URL}})
+- [Our PGP Public Key](https://metadatastician.art/.well-known/pgp-key.txt)
 - [Security Advisories](https://github.com/hyperpolymath/systemet/security/advisories)
 - [Changelog](CHANGELOG.md)
 - [Contributing Guidelines](CONTRIBUTING.md)
@@ -387,7 +369,7 @@ When using systemet, we recommend:
 
 | Purpose | Contact |
 |---------|---------|
-| **Security issues** | [Report via GitHub](https://github.com/hyperpolymath/systemet/security/advisories/new) or {{SECURITY_EMAIL}} |
+| **Security issues** | [Report via GitHub](https://github.com/hyperpolymath/systemet/security/advisories/new) or security@metadatastician.art |
 | **General questions** | [GitHub Discussions](https://github.com/hyperpolymath/systemet/discussions) |
 | **Other enquiries** | See [README](README.md) for contact information |
 

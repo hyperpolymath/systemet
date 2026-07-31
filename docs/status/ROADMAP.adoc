@@ -1,23 +1,49 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
-// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= YOUR Template Repo Roadmap
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+= systemet Roadmap
 
-== Current Status
+Milestones mirror the `route-to-mvp` phases in
+`.machine_readable/6a2/STATE.a2ml` (the single source for phase percentages)
+and the obligation ledger `docs/theory/OBLIGATIONS.adoc` (ET-1..ET-15).
 
-Initial development phase.
+== Current status
+
+Theory specified in `docs/theory/` (L3 sketched, pending ADR); mechanization
+of the tractable core (MECH-1, MECH-2) staged; TEA erasure (ET-14) OPEN.
+Honest completion figure lives in STATE.a2ml, evidence in
+`docs/status/PROOF-STATUS.adoc`.
 
 == Milestones
 
-=== v0.1.0 - Foundation
-* [ ] Core functionality
-* [ ] Basic documentation
-* [ ] CI/CD pipeline
+=== M1 — Spec complete
+* [x] `docs/theory/` populated: one doc per layer/gate + OBLIGATIONS ledger
+* [x] Template residue purged (src/ ABI seam, generic proof stubs, status files)
+* [ ] L3 ADR: adopt or replace the candidate guarded-recursion rules
+  (`docs/theory/06-l3-guarded-recursion.adoc`)
 
-=== v1.0.0 - Stable Release
-* [ ] Full feature set
-* [ ] Comprehensive tests
-* [ ] Production ready
+=== M2 — Mechanized core (MECH-1 / MECH-2)
+* [ ] Proof gate wired first (scripts/check-proofs.sh: prover-absent = FAIL;
+  watched-to-fail before trusted)
+* [ ] MECH-2: `GradeAlgebra` law set + Affine/Tropical/Lattice/Product
+  instances (ET-4, ET-5)
+* [ ] MECH-1: L1 conversion for the core calculus — `defEq_iff_nf` +
+  decidability (ET-1, ET-2, syntactic core of ET-3)
+* [ ] η-milestone (extends MECH-1; OPEN until landed)
 
-== Future Directions
+=== M3 — Discipline results
+* [ ] Structural Gate: ET-6 proof, ET-7 precise statement
+* [ ] Polarity Gate: ET-8, ET-9
+* [ ] First trope instance (file handle) with preservation argument
+  (ET-12, ET-13)
 
-_To be determined based on community feedback._
+=== M4 — The open problem
+* [ ] TEA erasure (ET-14) — research target; every claim stays amber until a
+  prover-checked artefact lands and AFFIRMATION records it
+
+== Estate-alignment items
+
+* Pending decision: migrate `.machine_readable/6a2/` to the descriptiles
+  layout (deferred — see the tracking issue; contractiles.mjs needs a Node
+  exception this repo has not taken).
+* Downstream: anytype must pin systemet (EXPLAINME §Relationship); audit
+  findings tracked as `[ET-*]` issues on hyperpolymath/anytype.
