@@ -170,7 +170,7 @@ Real-world external feedback confirming value. Populate
   honest, but zero proofs are discharged and the proof gate is not yet wired —
   nothing is validated beyond repository well-formedness.
 * Delta since 2026-06-28: grade X→E; template residue purged (src/ ABI seam,
-  generic proof stubs, {{PROJECT}} status files); docs/theory populated;
+  generic proof stubs, SYSTEMET status files); docs/theory populated;
   L3 honestly downgraded to sketched.
 * Next milestone: D requires the proof gate + MECH-2/MECH-1 landed with
   actually-run provers and counts cited in STATE.a2ml.
