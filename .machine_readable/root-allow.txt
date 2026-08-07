@@ -78,3 +78,10 @@ MAINTAINERS                # standards#505 governance sweep (PR #14)
 mise.toml                  # toolchain pinning from the governance sweep (PR #14)
 .hypatia-ignore
 CLAUDE.md
+
+# ─── Declared 2026-08-06: entries the RSR template's directory map did
+#     not anticipate. The template targets a documentation repository;
+#     these are this project's real top-level shape. Moving them would
+#     break every path that references them, to satisfy a map that was
+#     never written for it. Read from the estate-rules gate's own output.
+REQUIRES_INITIALISATION.md  # Project documentation.
