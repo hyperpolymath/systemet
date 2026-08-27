@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: MPL-2.0
 # This workflow is managed by gh actions-lock.
+# This workflow is managed by gh actions-lock.
 # Proof gate: the same scripts/check-proofs.sh a developer runs locally.
 # Hermetic by construction — elan comes from a version-pinned release tarball
 # with a checksum, the Lean toolchain from the committed lean-toolchain file,
