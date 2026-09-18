@@ -20,10 +20,12 @@ AFFIRMATION.adoc           # dated/signed honesty snapshot (README/EXPLAINME/AFF
 GOVERNANCE.adoc            # governance model (validator accepts root or docs/governance/)
 MAINTAINERS.adoc           # maintainer roster
 CONTRIBUTING.md            # REQUIRED AT ROOT by scorecard-enforcer/openssf-compliance/quality CI (test -f, no .github fallback). The fuller copy in .github/ is GitHub's auto-discovery convention; dedupe is an owner decision (would need those CI checks updated to accept .github/).
+CONTRIBUTING.adoc          # Current contributor guide after the AsciiDoc migration.
 SECURITY.md                # REQUIRED AT ROOT by scorecard-enforcer CI + the security-policy contractile (test -f SECURITY.md). See CONTRIBUTING.md note re: the .github/ copy.
 LICENSE
 LICENSES/                  # REUSE licence texts (MPL-2.0.txt + CC-BY-SA-4.0.txt) for the dual-licence model (code MPL-2.0 / docs CC-BY-SA-4.0)
 CHANGELOG.md
+CHANGELOG.adoc             # Current changelog after the AsciiDoc migration.
 CITATION.cff               # citation metadata (surfaced at root by #96)
 
 # ─── Build entry points (must live at root for their tooling) ────────────────
@@ -44,6 +46,7 @@ sonar-project.properties   # SonarCloud analysis config; the SonarQube scan acti
 .devcontainer/             # VS Code dev container spec; tool-required at root
 .git/
 .github/                   # CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md, workflows/
+www/                       # site-operations bundle; canonical .well-known/ lives at www/.well-known/ (issue #53)
 .machine_readable/         # AI manifests, contractiles, custom-format configs
 .well-known/
 ci/                        # .gitlab-ci.yml, .pre-commit-config.yaml (root shims if tools require)
