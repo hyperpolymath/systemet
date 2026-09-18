@@ -1,3 +1,5 @@
+-- SPDX-License-Identifier: MPL-2.0
+-- SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 import Systemet.L1.Syntax
 import Systemet.L1.Normal
 import Systemet.L1.Hsub
