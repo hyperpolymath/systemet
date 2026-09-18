@@ -46,6 +46,7 @@ sonar-project.properties   # SonarCloud analysis config; the SonarQube scan acti
 .devcontainer/             # VS Code dev container spec; tool-required at root
 .git/
 .github/                   # CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md, workflows/
+GEMINI.md                   # agent-tool pointer; read from the repository root by convention (owner ruling, 2026-09-18)
 www/                       # site-operations bundle; canonical .well-known/ lives at www/.well-known/ (issue #53)
 .machine_readable/         # AI manifests, contractiles, custom-format configs
 .well-known/
@@ -76,6 +77,7 @@ tools/                     # TODO: consolidate with scripts/ or document the spl
 # ─── Landed by merged PRs #14 (governance sweep) and #17 (mechanization) ─────
 build/                     # just modules for the proof gates (build/just/proofs.just)
 ARCHITECTURE.md            # standards#505 governance sweep (PR #14)
+ARCHITECTURE.adoc           # design overview; stays at root (owner ruling, 2026-09-18)
 GOVERNANCE.md              # standards#505 governance sweep (PR #14)
 MAINTAINERS                # standards#505 governance sweep (PR #14)
 mise.toml                  # toolchain pinning from the governance sweep (PR #14)
