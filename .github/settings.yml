@@ -7,13 +7,13 @@
 # applied by the probot/settings app when changes are pushed to the default
 # branch. Install the app at: https://github.com/apps/settings
 #
-# Template file — replace systemet and {{DESCRIPTION}} with actual values.
+# Template file — replace systemet and systemet is a stratified type theory. The name is system + ET, where ET stands for Equality Theory — because the one primitive relation the whole system keeps at the bottom is equality, and everything else is layered above it as discipline rather than added as new relations. with actual values.
 
 # ─── Repository Settings ───────────────────────────────────────────────────────
 
 repository:
   name: "systemet"
-  description: "{{DESCRIPTION}}"
+  description: "systemet is a stratified type theory. The name is system + ET, where ET stands for Equality Theory — because the one primitive relation the whole system keeps at the bottom is equality, and everything else is layered above it as discipline rather than added as new relations."
   homepage: "https://github.com/hyperpolymath/systemet"
   private: false
   has_issues: true
